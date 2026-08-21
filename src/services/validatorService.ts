@@ -1,6 +1,11 @@
 import type { ValidationResponse } from "../types/validation";
 
-const API_URL = "http://localhost:8082/v1/api/xmlvalidate";
+import { API_BASE_URL } from  "../config/api";
+ 
+const API_URL = `${API_BASE_URL}/v1/api/xmlvalidate`;
+ 
+
+//const API_URL = "http://localhost:8082/v1/api/xmlvalidate";
 
 export async function validateXml(
   xml: string

@@ -1,3 +1,8 @@
+import { API_BASE_URL } from  "../config/api";
+ 
+const API_URL = `${API_BASE_URL}/v1/api/message-summary`;
+ 
+
 export interface MessageSummaryResponse {
   success: boolean;
   messageType: string;
@@ -12,7 +17,7 @@ export const generateMessageSummary = async (
 ): Promise<MessageSummaryResponse> => {
 
   const response = await fetch(
-    "http://localhost:8082/v1/api/message-summary",
+    API_URL,
     {
       method: "POST",
 

@@ -8,10 +8,10 @@ const API_URL = `${API_BASE_URL}/v1/api/xmlvalidate`;
 //const API_URL = "http://localhost:8082/v1/api/xmlvalidate";
 
 export async function validateXml(
-  xml: string
+  xml: string,validationProfile: string
 ): Promise<ValidationResponse> {
 
-  const response = await fetch(API_URL, {
+  const response = await fetch(`${API_URL}?profile=${encodeURIComponent(validationProfile)}`, {
     method: "POST",
 
     headers: {

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type MessageFamily = "pacs" | "pain" | "camt";
@@ -74,64 +73,45 @@ const messageData: Record<MessageFamily, MessageData> = {
   }
 };
 
+const familyOrder: MessageFamily[] = ["pacs", "pain", "camt"];
+
+/**
+ * Builds a minimal starter XML for a given ISO 20022 version — correct
+ * root element and namespace, with a comment marking it as a skeleton.
+ * This is NOT a fully populated, schema-valid message (the actual body
+ * differs per message type and would need the real XSD to generate
+ * accurately) — it's a starting point to test against the validator.
+ */
+function buildSampleXml(messageType: string, version: string): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:${version}">
+  <!--
+    Starter skeleton for ${messageType} (${version}).
+    This is not a complete, schema-valid message — replace this
+    comment with the actual message body for your use case.
+  -->
+</Document>
+`;
+}
+
+function downloadSample(messageType: string, version: string) {
+  const xml = buildSampleXml(messageType, version);
+  const blob = new Blob([xml], { type: "application/xml" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${version}-sample.xml`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
 
 function SupportedMessagesPage() {
 
   const navigate = useNavigate();
-
-  const [selectedFamily, setSelectedFamily] =
-    useState<MessageFamily | null>(null);
-
-  const [selectedMessage, setSelectedMessage] =
-    useState<string | null>(null);
-
-
-  /*
-   * This guarantees that versions is always an array.
-   * Therefore .map() will not throw an error.
-   */
-  const versions: string[] =
-    selectedFamily && selectedMessage
-      ? messageData[selectedFamily]
-          .messages[selectedMessage] ?? []
-      : [];
-
-
-  const handleFamilyClick = (
-    family: MessageFamily
-  ) => {
-
-    setSelectedFamily(family);
-
-    // Reset selected message when changing family
-    setSelectedMessage(null);
-  };
-
-
-  const handleBack = () => {
-
-    // If user is viewing versions
-    if (selectedMessage) {
-
-      setSelectedMessage(null);
-
-    }
-
-    // If user is viewing messages
-    else if (selectedFamily) {
-
-      setSelectedFamily(null);
-
-    }
-
-    // If user is on the main supported messages screen
-    else {
-
-      navigate("/");
-    }
-
-  };
-
 
   return (
 
@@ -139,213 +119,107 @@ function SupportedMessagesPage() {
 
       <div className="supported-container">
 
-
         {/* BACK BUTTON */}
 
         <button
           className="back-button"
-          onClick={handleBack}
+          onClick={() => navigate("/")}
         >
           ← Back
         </button>
 
+        <h1>
+          Supported Messages
+        </h1>
 
-        {/* ================================= */}
-        {/* LEVEL 1 - MESSAGE FAMILIES */}
-        {/* ================================= */}
-
-        {!selectedFamily && (
-
-          <>
-
-            <h1>
-              Supported Messages
-            </h1>
-
-            <p>
-              Browse ISO 20022 message families,
-              message types and available versions.
-            </p>
+        <p>
+          Browse ISO 20022 message families,
+          message types and available versions.
+          Each version includes a downloadable starter XML.
+        </p>
 
 
-            <div className="family-grid">
+        {/* Everything below is rendered up front —
+            no clicks needed to see message types or versions. */}
 
+        {familyOrder.map((family) => (
 
-              {/* PACS */}
+          <section
+            key={family}
+            className="family-section"
+          >
 
-              <button
-                className="family-card"
-                onClick={() =>
-                  handleFamilyClick("pacs")
-                }
-              >
+            <div className="family-section-header">
+              <h2>{family}</h2>
+              <p>{messageData[family].title}</p>
+            </div>
 
-                <h2>
-                  pacs
-                </h2>
+            <div className="message-block-grid">
 
-                <p>
-                  Payments Clearing and Settlement
-                </p>
+              {Object.entries(messageData[family].messages).map(
+                ([messageType, versions]) => (
 
-                <span>
-                  View Messages →
-                </span>
+                  <div
+                    key={messageType}
+                    className="message-block"
+                  >
 
-              </button>
+                    <h3>{messageType}</h3>
 
+                    <div className="version-chip-list">
 
-              {/* PAIN */}
+                      {versions.map((version) => (
 
-              <button
-                className="family-card"
-                onClick={() =>
-                  handleFamilyClick("pain")
-                }
-              >
+                        <div
+                          key={version}
+                          className="version-chip-row"
+                        >
 
-                <h2>
-                  pain
-                </h2>
+                          <span className="version-chip">
+                            {version}
+                          </span>
 
-                <p>
-                  Payment Initiation
-                </p>
+                          <button
+                            type="button"
+                            className="version-download-link"
+                            onClick={() =>
+                              downloadSample(messageType, version)
+                            }
+                            title={`Download a starter XML for ${version}`}
+                          >
+                            <svg
+                              width="13"
+                              height="13"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2.2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M12 3v12" />
+                              <path d="M7 10l5 5 5-5" />
+                              <path d="M5 21h14" />
+                            </svg>
+                            Download sample
+                          </button>
 
-                <span>
-                  View Messages →
-                </span>
+                        </div>
 
-              </button>
+                      ))}
 
+                    </div>
 
-              {/* CAMT */}
+                  </div>
 
-              <button
-                className="family-card"
-                onClick={() =>
-                  handleFamilyClick("camt")
-                }
-              >
-
-                <h2>
-                  camt
-                </h2>
-
-                <p>
-                  Cash Management
-                </p>
-
-                <span>
-                  View Messages →
-                </span>
-
-              </button>
-
+                )
+              )}
 
             </div>
 
-          </>
+          </section>
 
-        )}
-
-
-        {/* ================================= */}
-        {/* LEVEL 2 - MESSAGE TYPES */}
-        {/* Example: pacs.002, pacs.008 */}
-        {/* ================================= */}
-
-        {selectedFamily && !selectedMessage && (
-
-          <>
-
-            <h1>
-              {selectedFamily}
-            </h1>
-
-            <p>
-              {messageData[selectedFamily].title}
-            </p>
-
-
-            <div className="message-grid">
-
-              {Object.keys(
-                messageData[selectedFamily].messages
-              ).map((message) => (
-
-                <button
-                  key={message}
-                  className="message-card"
-                  onClick={() =>
-                    setSelectedMessage(message)
-                  }
-                >
-
-                  <h2>
-                    {message}
-                  </h2>
-
-                  <span>
-                    View Versions →
-                  </span>
-
-                </button>
-
-              ))}
-
-            </div>
-
-          </>
-
-        )}
-
-
-        {/* ================================= */}
-        {/* LEVEL 3 - MESSAGE VERSIONS */}
-        {/* Example: pacs.008.001.14 */}
-        {/* ================================= */}
-
-        {selectedFamily && selectedMessage && (
-
-          <>
-
-            <h1>
-              {selectedMessage}
-            </h1>
-
-            <p>
-              Available ISO 20022 versions
-            </p>
-
-
-            <div className="version-grid">
-
-              {versions.map((version) => (
-
-                <div
-                  key={version}
-                  className="version-card"
-                >
-
-                  <h3>
-                    {version}
-                  </h3>
-
-                  <span className="supported-badge">
-                    Supported
-                  </span>
-
-                </div>
-
-              ))}
-
-            </div>
-
-          </>
-
-        )}
-
+        ))}
 
       </div>
 
@@ -354,6 +228,5 @@ function SupportedMessagesPage() {
   );
 
 }
-
 
 export default SupportedMessagesPage;

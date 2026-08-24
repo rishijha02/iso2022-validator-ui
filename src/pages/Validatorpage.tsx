@@ -316,9 +316,9 @@ function ValidatorPage() {
 
                 <nav>
 
-                    <a href="#">
-                        Documentation
-                    </a>
+                    <Link to="/documentation">
+                    Documentation
+                    </Link>
 
 
                     <Link to="/supported-messages">

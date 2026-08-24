@@ -53,83 +53,119 @@ function AboutPage() {
 
         </section>
 
+
+        {/* TEAM SECTION */}
+
         <section className="team-section">
 
-  <div className="team-header">
+          <h2>Our Team</h2>
 
-    <h2>Our Team</h2>
-
-    <p>
-      The people building tools to make ISO 20022 messages
-      easier to validate, understand, and troubleshoot.
-    </p>
-
-  </div>
+          <p>
+            The people building tools to make ISO 20022 messages
+            easier to validate, understand, and troubleshoot.
+          </p>
 
 
-  <div className="team-grid">
-
-    <div className="team-card">
-
-      <div className="team-avatar">
-        RJ
-      </div>
-
-      <h3>Rishi Jha</h3>
-
-      <p className="team-role">
-        Founder & Developer
-      </p>
-
-      <p className="team-description">
-        Building fintech solutions with a focus on banking,
-        payments, ISO 20022, and financial technology.
-      </p>
-
-    </div>
-
-    <div className="team-card">
-
-      <div className="team-avatar">
-        VK
-      </div>
-
-      <h3>Vikash Kumar</h3>
-
-      <p className="team-role">
-        Mentor & Business Analyst
-      </p>
-
-      <p className="team-description">
-        Building fintech solutions with a focus on banking,
-        payments, ISO 20022, and financial technology.
-      </p>
-
-    </div>
-
-    <div className="team-card">
-
-      <div className="team-avatar">
-        APS
-      </div>
-
-      <h3>Ashish Pratap Singh</h3>
-
-      <p className="team-role">
-        Developer & Business Analyst
-      </p>
-
-      <p className="team-description">
-        Building fintech solutions with a focus on banking,
-        payments, ISO 20022, and financial technology.
-      </p>
-
-    </div>
+          <div className="team-container">
 
 
-  </div>
+            {/* Rishi */}
 
-</section>
+            <div className="team-card">
+
+              <div className="team-avatar">
+                RJ
+              </div>
+
+              <h3>Rishi Jha</h3>
+
+              <p className="team-role">
+                Founder & Developer
+              </p>
+
+              <p className="team-description">
+                Building fintech solutions with a focus on banking,
+                payments, ISO 20022, and financial technology.
+              </p>
+
+              <a
+                href="https://www.linkedin.com/in/rishi-jha-168719172/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="linkedin-button"
+              >
+                LinkedIn →
+              </a>
+
+            </div>
+
+
+            {/* Vikash */}
+
+            <div className="team-card">
+
+              <div className="team-avatar">
+                VK
+              </div>
+
+              <h3>Vikash Kumar</h3>
+
+              <p className="team-role">
+                Mentor & Business Analyst
+              </p>
+
+              <p className="team-description">
+                Supporting the project with business analysis,
+                domain knowledge, and guidance around banking
+                and financial services.
+              </p>
+
+              <a
+                href="https://www.linkedin.com/in/vikash-kumar-52245857/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="linkedin-button"
+              >
+                LinkedIn →
+              </a>
+
+            </div>
+
+
+            {/* Ashish */}
+
+            <div className="team-card">
+
+              <div className="team-avatar">
+                APS
+              </div>
+
+              <h3>Ashish Pratap Singh</h3>
+
+              <p className="team-role">
+                Developer & Business Analyst
+              </p>
+
+              <p className="team-description">
+                Contributing to the project through development,
+                business analysis, and expertise in financial
+                technology solutions.
+              </p>
+
+              <a
+                href="https://www.linkedin.com/in/ashish-pratap-singh/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="linkedin-button"
+              >
+                LinkedIn →
+              </a>
+
+            </div>
+
+          </div>
+
+        </section>
 
 
         <section className="about-card">

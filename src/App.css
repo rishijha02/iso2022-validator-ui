@@ -1125,3 +1125,426 @@
   }
 
 }
+
+/* =========================================
+   DOCUMENTATION PAGE
+========================================= */
+
+.documentation-page {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 60px 20px 80px;
+}
+
+.documentation-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.documentation-hero {
+  margin-bottom: 60px;
+}
+
+.documentation-hero h1 {
+  margin-top: 28px;
+  margin-bottom: 12px;
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.documentation-hero p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.7;
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.back-button {
+  border: 1px solid #e2e8f0;
+  background: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+
+/* =========================================
+   DOCUMENTATION SECTION
+========================================= */
+
+.documentation-section {
+  margin-bottom: 55px;
+}
+
+.documentation-section > h2 {
+  margin-bottom: 16px;
+  font-size: 28px;
+  font-weight: 650;
+}
+
+.documentation-section > p {
+  max-width: 800px;
+  margin-bottom: 25px;
+  line-height: 1.7;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+
+/* =========================================
+   GETTING STARTED STEPS
+========================================= */
+
+.documentation-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.documentation-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+
+  padding: 22px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: white;
+}
+
+.step-number {
+  min-width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #111827;
+  color: white;
+
+  font-weight: 600;
+}
+
+.documentation-step h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.documentation-step p {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   FEATURE GRID
+========================================= */
+
+.documentation-feature-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+
+  gap: 20px;
+}
+
+.documentation-card {
+  padding: 24px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: white;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.documentation-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.documentation-card h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+
+  font-size: 18px;
+}
+
+.documentation-card p {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   INFO BOX
+========================================= */
+
+.documentation-info-box {
+  padding: 24px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #fafafa;
+}
+
+.documentation-info-box h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+
+  font-size: 18px;
+}
+
+.documentation-info-box p {
+  margin: 0;
+
+  line-height: 1.7;
+  opacity: 0.8;
+}
+
+.documentation-info-box ul,
+.documentation-info-box ol {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.documentation-info-box li {
+  margin-bottom: 10px;
+
+  line-height: 1.6;
+}
+
+.documentation-info-box li:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================
+   SUPPORTED MESSAGE LINK
+========================================= */
+
+.documentation-link-container {
+  margin-top: 25px;
+}
+
+.documentation-link {
+  display: inline-flex;
+
+  padding: 11px 18px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+
+  color: inherit;
+
+  transition: all 0.2s ease;
+}
+
+.documentation-link:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+
+/* =========================================
+   COMING SOON SECTION
+========================================= */
+
+.coming-soon-section {
+  position: relative;
+
+  padding: 32px;
+
+  border: 1px dashed #cbd5e1;
+  border-radius: 14px;
+
+  background: #fafafa;
+}
+
+.coming-soon-badge {
+  display: inline-flex;
+
+  margin-bottom: 18px;
+
+  padding: 6px 12px;
+
+  border-radius: 20px;
+
+  background: #e2e8f0;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.coming-soon-section h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+
+  font-size: 28px;
+}
+
+.coming-soon-section > p {
+  margin-bottom: 25px;
+
+  line-height: 1.7;
+  opacity: 0.8;
+}
+
+
+/* =========================================
+   FOOTER CTA
+========================================= */
+
+.documentation-footer {
+  margin-top: 70px;
+
+  padding: 45px 25px;
+
+  text-align: center;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.documentation-footer h2 {
+  margin-bottom: 12px;
+
+  font-size: 28px;
+}
+
+.documentation-footer p {
+  margin-bottom: 25px;
+
+  opacity: 0.75;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+  .documentation-page {
+    padding: 40px 16px 60px;
+  }
+
+  .documentation-hero {
+    margin-bottom: 45px;
+  }
+
+  .documentation-hero h1 {
+    font-size: 32px;
+  }
+
+  .documentation-section {
+    margin-bottom: 45px;
+  }
+
+  .documentation-section > h2 {
+    font-size: 24px;
+  }
+
+  .documentation-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .documentation-step {
+    padding: 18px;
+  }
+
+  .coming-soon-section {
+    padding: 24px;
+  }
+
+  .documentation-footer {
+    padding: 35px 15px;
+  }
+
+}
+
+
+.team-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  margin-top: 30px;
+}
+
+.linkedin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 18px;
+
+  padding: 9px 16px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  background: white;
+
+  color: #1f2937;
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+}
+
+.linkedin-button:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+
+  .team-container {
+    grid-template-columns: 1fr;
+  }
+
+}

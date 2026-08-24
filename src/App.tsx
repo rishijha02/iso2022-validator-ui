@@ -5,6 +5,7 @@ import MessageSummaryPage from "./pages/MessageSummaryPage";
 import AboutPage from "./pages/AboutPage";
 import SupportedMessagesPage from "./pages/SupportedMessagesPage";
 import XmlToJsonPage from "./pages/XmlToJsonPage";
+import DocumentationPage from "./pages/DocumentationPage";
 
 import "./App.css";
 
@@ -36,6 +37,11 @@ function App() {
         path="/xml-to-json"
         element={<XmlToJsonPage />}
     />
+
+    <Route
+      path="/documentation"
+     element={<DocumentationPage />}
+      />
 
       </Routes>
     </BrowserRouter>

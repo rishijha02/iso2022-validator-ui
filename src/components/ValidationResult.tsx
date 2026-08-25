@@ -1,108 +1,224 @@
-import type { ValidationResponse } from "../types/validation";
+import type {
+  ValidationResponse,
+  ValidationError,
+} from "../types/validation";
 
 interface ValidationResultProps {
-  result: ValidationResponse | null;
+  result: ValidationResponse;
 }
 
-function CheckIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M8 12.5l2.5 2.5L16 9.5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+function ValidationResult({
+  result,
+}: ValidationResultProps) {
 
-function AlertIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.6" />
-      <path
-        d="M12 7.5v5.5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <circle cx="12" cy="16.3" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function ValidationResult({ result }: ValidationResultProps) {
-  if (!result) {
-    return null;
-  }
-
-  const errors = result.errors ?? [];
-  const hasErrors = errors.length > 0;
+  const errors: ValidationError[] =
+    result.errors ?? [];
 
   return (
-    <div className="result-card">
-      <div
-        className={`result-header ${
-          result.valid ? "result-header--valid" : "result-header--invalid"
-        }`}
-      >
-        <div
-          className={`status-pill ${
-            result.valid ? "status-pill--valid" : "status-pill--invalid"
-          }`}
-        >
-          {result.valid ? <CheckIcon /> : <AlertIcon />}
-          <span>{result.valid ? "Valid message" : "Validation failed"}</span>
-        </div>
 
-        {result.message && <p className="result-message">{result.message}</p>}
-      </div>
+    <section
+      className={
+        result.valid
+          ? "validation-result success"
+          : "validation-result failure"
+      }
+    >
 
-      <div className="result-summary">
-        <div className="summary-item">
-          <span className="summary-label">Message type</span>
-          <span className="summary-value">{result.messageTyp || "—"}</span>
-        </div>
+      {/* Result Header */}
 
-        <div className="summary-item">
-          <span className="summary-label">Version</span>
-          <span className="summary-value">{result.version || "—"}</span>
-        </div>
+      <div className="validation-result-header">
 
-        <div className="summary-item summary-item--wide">
-          <span className="summary-label">Namespace</span>
-          <span className="summary-value summary-value--mono">
-            {result.namespace || "—"}
+        <div className="validation-status">
+
+          <span className="validation-icon">
+
+            {result.valid ? "✓" : "!"}
+
           </span>
-        </div>
-      </div>
 
-      {hasErrors ? (
-        <div className="error-list">
-          <div className="error-list-header">
-            <span>Line</span>
-            <span>Column</span>
-            <span>Code</span>
-            <span>Message</span>
+          <div>
+
+            <h2>
+
+              {result.valid
+                ? "Validation successful"
+                : "Validation failed"}
+
+            </h2>
+
+            <p>
+              {result.message}
+            </p>
+
           </div>
 
-          {errors.map((error, index) => (
-            <div className="error-item" key={`${error.code}-${index}`}>
-              <span className="error-location">{error.line}</span>
-              <span className="error-location">{error.column}</span>
-              <span className="error-code">{error.code}</span>
-              <span className="error-message">{error.message}</span>
-            </div>
-          ))}
         </div>
-      ) : (
-        <div className="empty-errors">No schema issues found in this message.</div>
+
+      </div>
+
+
+      {/* Message Information */}
+
+      <div className="validation-meta">
+
+        <div className="meta-card">
+
+          <span>
+            MESSAGE TYPE
+          </span>
+
+          <strong>
+            {result.messageType ??
+              result.messageTyp ??
+              "-"}
+          </strong>
+
+        </div>
+
+
+        <div className="meta-card">
+
+          <span>
+            VERSION
+          </span>
+
+          <strong>
+            {result.version ?? "-"}
+          </strong>
+
+        </div>
+
+
+        {result.namespace && (
+
+          <div className="meta-card namespace-card">
+
+            <span>
+              NAMESPACE
+            </span>
+
+            <strong>
+              {result.namespace}
+            </strong>
+
+          </div>
+
+        )}
+
+      </div>
+
+
+      {/* Validation Errors */}
+
+      {!result.valid &&
+        errors.length > 0 && (
+
+          <div className="validation-errors">
+
+            <h3>
+              Issues Found
+            </h3>
+
+
+            {errors.map(
+              (error, index) => (
+
+                <div
+                  className="friendly-error-card"
+                  key={index}
+                >
+
+                  {/* Error Location */}
+
+                  <div className="error-location">
+
+                    <span>
+
+                      📍 Line{" "}
+
+                      <strong>
+                        {error.line ?? "-"}
+                      </strong>
+
+                    </span>
+
+
+                    <span>
+
+                      Column{" "}
+
+                      <strong>
+                        {error.column ?? "-"}
+                      </strong>
+
+                    </span>
+
+                  </div>
+
+
+                  {/* Friendly Error */}
+
+                  <div className="friendly-error-message">
+
+                    <h4>
+
+                      ❌ {error.message}
+
+                    </h4>
+
+
+                    {error.suggestion && (
+
+                      <div className="error-suggestion">
+
+                        <span>
+                          How to fix
+                        </span>
+
+                        <p>
+                          {error.suggestion}
+                        </p>
+
+                      </div>
+
+                    )}
+
+                  </div>
+
+
+                  {/* Technical Details */}
+
+                  {error.technicalMessage && (
+
+                    <details
+                      className="technical-details"
+                    >
+
+                      <summary>
+                        Technical details
+                      </summary>
+
+                      <pre>
+                        {error.technicalMessage}
+                      </pre>
+
+                    </details>
+
+                  )}
+
+                </div>
+
+              )
+            )}
+
+        </div>
+
       )}
-    </div>
+
+    </section>
+
   );
+
 }
 
 export default ValidationResult;

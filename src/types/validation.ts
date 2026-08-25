@@ -1,15 +1,24 @@
 export interface ValidationError {
-  code: string;
-  line: number;
-  column: number;
+  line?: number;
+  column?: number;
+  code?: string;
+
+  // User-friendly message
   message: string;
+
+  // Suggested fix
+  suggestion?: string;
+
+  // Original XSD / technical error
+  technicalMessage?: string;
 }
 
 export interface ValidationResponse {
   valid: boolean;
   message: string;
-  messageTyp: string;
-  version: string;
-  namespace: string;
-  errors: ValidationError[] | null;
+  messageType?: string;
+  messageTyp?: string;
+  version?: string;
+  namespace?: string;
+  errors?: ValidationError[] | null;
 }

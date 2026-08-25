@@ -21,9 +21,11 @@ export async function validateWithCustomXsd(
 
   const formData = new FormData();
 
+  const cleanedXml = xml.trim();
+
   formData.append(
     "xml",
-    xml
+    cleanedXml
   );
 
   formData.append("xsd", xsdFile);

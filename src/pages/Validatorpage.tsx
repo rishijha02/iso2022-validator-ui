@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import XmlEditor from "../components/XmlEditor";
 import ValidationResult from "../components/ValidationResult";
 import { validateXml } from "../services/validatorService";
 import { validateWithCustomXsd } from "../services/customxsdService";
+import { generateMessageSummary } from "../services/messageSummaryService";
 
 import type { ValidationResponse } from "../types/validation";
+import type { MessageSummaryResponse } from "../services/messageSummaryService";
 
 
 const sampleXml = `
@@ -105,6 +107,15 @@ function ValidatorPage() {
     const [result, setResult] =
         useState<ValidationResponse | null>(null);
 
+    const [summaryResult, setSummaryResult] =
+        useState<MessageSummaryResponse | null>(null);
+
+    const [summaryLoading, setSummaryLoading] =
+        useState(false);
+
+    const [summaryError, setSummaryError] =
+        useState<string | null>(null);
+
 
     // NEW: Validation Profile
     const [validationProfile, setValidationProfile] =
@@ -117,8 +128,6 @@ function ValidatorPage() {
 
     const xsdInputRef = useRef<HTMLInputElement>(null);
 
-
-    const navigate = useNavigate();
 
 
     /**
@@ -168,6 +177,8 @@ function ValidatorPage() {
         if (file) {
             setCustomXsdFile(file);
             setResult(null);
+            setSummaryResult(null);
+            setSummaryError(null);
         }
 
         // allow re-selecting the same file later
@@ -179,6 +190,8 @@ function ValidatorPage() {
     const handleRemoveXsd = () => {
         setCustomXsdFile(null);
         setResult(null);
+        setSummaryResult(null);
+        setSummaryError(null);
     };
 
 
@@ -200,6 +213,8 @@ function ValidatorPage() {
 
 
         setLoading(true);
+        setSummaryResult(null);
+        setSummaryError(null);
 
 
         try {
@@ -267,20 +282,36 @@ function ValidatorPage() {
 
 
     /**
-     * Navigate to Message Summary page
+     * Generate a business-friendly summary for the validated XML.
      */
-    const viewSummary = () => {
+    const handleGenerateSummary = async () => {
 
-        navigate("/summary", {
+        if (!xml.trim()) {
+            return;
+        }
 
-            state: {
-                xml: xml
+        setSummaryLoading(true);
+        setSummaryError(null);
+
+        try {
+            const response = await generateMessageSummary(xml);
+
+            if (!response.success) {
+                setSummaryResult(response);
+                setSummaryError(response.errorMessage || "Unable to generate message summary.");
+                return;
             }
 
-        });
+            setSummaryResult(response);
 
+        } catch (error) {
+            console.error("Unable to generate summary:", error);
+            setSummaryError("Unable to generate message summary. Please try again.");
+
+        } finally {
+            setSummaryLoading(false);
+        }
     };
-
 
     return (
 
@@ -385,6 +416,8 @@ function ValidatorPage() {
       onChange={(e) => {
         setValidationProfile(e.target.value);
         setResult(null);
+        setSummaryResult(null);
+        setSummaryError(null);
       }}
     >
       <option value="ISO20022">
@@ -498,21 +531,54 @@ function ValidatorPage() {
                         />
 
 
-                        {/* Show summary only for valid messages */}
+                        {/* Generate summary only for valid messages */}
 
                         {result.valid && (
-
                             <div className="summary-action">
-
                                 <button
                                     className="summary-button"
-                                    onClick={viewSummary}
+                                    onClick={handleGenerateSummary}
+                                    disabled={summaryLoading}
                                 >
-                                    View Message Summary →
+                                    {summaryLoading
+                                        ? "Generating Summary..."
+                                        : summaryResult
+                                            ? "Refresh Message Summary ↻"
+                                            : "Generate Message Summary →"}
                                 </button>
-
                             </div>
+                        )}
 
+                        {result.valid && summaryError && (
+                            <div className="inline-summary-error">
+                                {summaryError}
+                            </div>
+                        )}
+
+                        {result.valid && summaryResult && summaryResult.success && (
+                            <section className="inline-summary-section">
+                                <div className="inline-summary-heading">
+                                    <div>
+                                        <span className="inline-summary-eyebrow">MESSAGE SUMMARY</span>
+                                        <h2>{summaryResult.title}</h2>
+                                        <p>Business-friendly details extracted from your validated XML.</p>
+                                    </div>
+
+                                    <div className="summary-badges">
+                                        <span className="message-type-badge">{summaryResult.messageType}</span>
+                                        <span className="version-badge">Version {summaryResult.version}</span>
+                                    </div>
+                                </div>
+
+                                <div className="inline-summary-grid">
+                                    {Object.entries(summaryResult.summary).map(([key, value]) => (
+                                        <div key={key} className="inline-summary-item">
+                                            <span className="inline-summary-label">{key}</span>
+                                            <span className="inline-summary-value">{value || "—"}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
                         )}
 
                     </>

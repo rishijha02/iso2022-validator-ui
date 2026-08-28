@@ -356,8 +356,12 @@ function ValidatorPage() {
                         Supported Messages
                     </Link>
 
-                     <Link to="/xml-to-json">
+                     {/* <Link to="/xml-to-json">
                          XML to JSON
+                     </Link> */}
+
+                     <Link to="/developer-tools">
+                         DeveloperTools
                      </Link>
 
 

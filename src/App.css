@@ -2011,3 +2011,554 @@
   }
 
 }
+
+/* =========================
+   Developer Tools Page
+========================= */
+
+.developer-tools-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+}
+
+
+.tools-hero {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 50px;
+}
+
+
+.tools-hero h1 {
+    font-size: 38px;
+    margin-bottom: 14px;
+}
+
+
+.tools-hero p {
+    font-size: 17px;
+    line-height: 1.7;
+    opacity: 0.75;
+}
+
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(280px, 1fr)
+    );
+    gap: 24px;
+}
+
+
+.tool-card {
+    display: flex;
+    flex-direction: column;
+
+    padding: 30px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    background: #ffffff;
+
+    text-decoration: none;
+    color: inherit;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.tool-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 12px 30px
+        rgba(0, 0, 0, 0.08);
+
+    border-color: #cbd5e1;
+}
+
+
+.tool-icon {
+    font-size: 34px;
+    margin-bottom: 18px;
+}
+
+
+.tool-card h2 {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+
+.tool-card p {
+    line-height: 1.6;
+    opacity: 0.72;
+
+    flex-grow: 1;
+}
+
+
+.tool-link {
+    margin-top: 24px;
+
+    font-weight: 600;
+
+    color: #2563eb;
+}
+
+
+.tool-card-disabled {
+    opacity: 0.75;
+    cursor: default;
+}
+
+
+.tool-card-disabled:hover {
+    transform: none;
+}
+
+
+.coming-soon {
+    margin-top: 24px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    width: fit-content;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    background: #f3f4f6;
+}
+
+
+.tools-back {
+    margin-top: 45px;
+    text-align: center;
+}
+
+
+.active-nav {
+    font-weight: 600;
+}
+
+/* ========================================
+   IDENTIFIER VALIDATOR PAGE
+======================================== */
+
+.identifier-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 24px 80px;
+}
+
+
+/* ========================================
+   HERO
+======================================== */
+
+.identifier-hero {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 50px;
+}
+
+.identifier-hero h1 {
+  font-size: 38px;
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+
+.identifier-hero p {
+  font-size: 17px;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+
+/* ========================================
+   VALIDATOR GRID
+======================================== */
+
+.identifier-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+
+/* ========================================
+   VALIDATOR CARD
+======================================== */
+
+.identifier-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.identifier-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ========================================
+   CARD HEADER
+======================================== */
+
+.identifier-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.identifier-card-header h2 {
+  font-size: 22px;
+  margin: 0 0 10px;
+}
+
+.identifier-card-header p {
+  margin: 0;
+  line-height: 1.6;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+
+/* ========================================
+   BADGE
+======================================== */
+
+.identifier-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 52px;
+  height: 32px;
+
+  padding: 0 12px;
+
+  border-radius: 20px;
+
+  background: #f3f4f6;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+
+/* ========================================
+   INPUT
+======================================== */
+
+.identifier-input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 14px 16px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 9px;
+
+  font-size: 15px;
+
+  outline: none;
+
+  margin-bottom: 16px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.identifier-input:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(37, 99, 235, 0.1);
+}
+
+.identifier-input::placeholder {
+  color: #9ca3af;
+}
+
+
+/* ========================================
+   BUTTON
+======================================== */
+
+.identifier-card .summary-button {
+  width: 100%;
+  justify-content: center;
+}
+
+.identifier-card .summary-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+
+/* ========================================
+   VALIDATION RESULT
+======================================== */
+
+.identifier-result {
+  margin-top: 24px;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  border: 1px solid transparent;
+}
+
+
+/* VALID */
+
+.identifier-result.valid {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+
+/* INVALID */
+
+.identifier-result.invalid {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+
+/* RESULT TITLE */
+
+.identifier-result-title {
+  font-size: 17px;
+  font-weight: 700;
+
+  margin-bottom: 8px;
+}
+
+
+/* VALID TITLE */
+
+.identifier-result.valid
+.identifier-result-title {
+  color: #15803d;
+}
+
+
+/* INVALID TITLE */
+
+.identifier-result.invalid
+.identifier-result-title {
+  color: #dc2626;
+}
+
+
+/* MESSAGE */
+
+.identifier-result p {
+  margin: 0;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  color: #4b5563;
+}
+
+
+/* ========================================
+   DETAILS
+======================================== */
+
+.identifier-details {
+  margin-top: 18px;
+
+  border-top: 1px solid
+    rgba(0, 0, 0, 0.08);
+
+  padding-top: 12px;
+}
+
+
+.identifier-details > div {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 9px 0;
+
+  border-bottom:
+    1px solid
+    rgba(0, 0, 0, 0.05);
+}
+
+
+.identifier-details > div:last-child {
+  border-bottom: none;
+}
+
+
+.identifier-details span {
+  font-size: 13px;
+
+  color: #6b7280;
+}
+
+
+.identifier-details strong {
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #111827;
+
+  text-align: right;
+
+  word-break: break-word;
+}
+
+
+/* ========================================
+   INFORMATION SECTION
+======================================== */
+
+.identifier-info {
+  margin-top: 55px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 28px;
+}
+
+
+.identifier-info > div {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  padding: 28px;
+
+  box-shadow:
+    0 6px 25px
+    rgba(0, 0, 0, 0.03);
+}
+
+
+.identifier-info h3 {
+  margin-top: 0;
+
+  margin-bottom: 12px;
+
+  font-size: 20px;
+}
+
+
+.identifier-info p {
+  margin: 0;
+
+  color: #6b7280;
+
+  line-height: 1.7;
+
+  font-size: 14px;
+}
+
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 850px) {
+
+  .identifier-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .identifier-info {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .identifier-page {
+    padding:
+      35px 16px
+      60px;
+  }
+
+
+  .identifier-hero {
+    margin-bottom: 35px;
+  }
+
+
+  .identifier-hero h1 {
+    font-size: 30px;
+  }
+
+
+  .identifier-card {
+    padding: 20px;
+  }
+
+
+  .identifier-card-header {
+    flex-direction: column;
+  }
+
+
+  .identifier-badge {
+    align-self: flex-start;
+  }
+
+
+  .identifier-details > div {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 4px;
+  }
+
+
+  .identifier-details strong {
+    text-align: left;
+  }
+
+}

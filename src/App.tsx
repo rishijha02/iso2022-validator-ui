@@ -6,6 +6,8 @@ import AboutPage from "./pages/AboutPage";
 import SupportedMessagesPage from "./pages/SupportedMessagesPage";
 import XmlToJsonPage from "./pages/XmlToJsonPage";
 import DocumentationPage from "./pages/DocumentationPage";
+import DeveloperToolsPage from "./pages/DeveloperToolsPage";
+import IdentifierValidatorPage from "./pages/IdentifierValidatorPage";
 
 import "./App.css";
 
@@ -42,6 +44,15 @@ function App() {
       path="/documentation"
      element={<DocumentationPage />}
       />
+
+      <Route
+      path="/developer-tools"
+     element={<DeveloperToolsPage />}
+      />
+       <Route
+    path="/developer-tools/identifier-validator"
+    element={<IdentifierValidatorPage />}
+  />
 
       </Routes>
     </BrowserRouter>

@@ -127,6 +127,59 @@ function DeveloperToolsPage() {
 
                     </Link>
 
+                    {/* Base64 */}
+
+                    <Link
+                        to="/developer-tools/base64"
+                        className="tool-card"
+                    >
+
+                        <div className="tool-icon">
+                            🔐
+                        </div>
+
+                        <h2>
+                            Base64 Encoder / Decoder
+                        </h2>
+
+                        <p>
+                            Encode text into Base64 or decode
+                            Base64 data back into readable text.
+                        </p>
+
+                        <span className="tool-link">
+                            Open Tool →
+                        </span>
+
+                    </Link>
+
+
+                        {/* UUID */}
+
+                        <Link
+                            to="/developer-tools/uuid-generator"
+                            className="tool-card"
+                        >
+
+                            <div className="tool-icon">
+                                🆔
+                            </div>
+
+                            <h2>
+                                UUID Generator
+                            </h2>
+
+                            <p>
+                                Generate UUID v4 values for testing,
+                                transaction IDs, UETR, and correlation IDs.
+                            </p>
+
+                            <span className="tool-link">
+                                Open Tool →
+                            </span>
+
+                        </Link>
+
 
 
                     {/* IBAN BIC */}
@@ -151,6 +204,39 @@ function DeveloperToolsPage() {
                         <p>
                             Validate International Bank Account
                             Numbers and SWIFT/BIC codes.
+                        </p>
+
+
+                        <span className="tool-link">
+
+                            Open Tool →
+
+                        </span>
+
+                    </Link>
+
+                    {/* Hex */}
+
+                    <Link
+                        to="/developer-tools/hex-encoder-decoder"
+                        className="tool-card"
+                    >
+
+                        <div className="tool-icon">
+
+                            🔢
+
+                        </div>
+
+
+                        <h2>
+                            Hexadecimal Encoder / Decoder
+                        </h2>
+
+
+                        <p>
+                            Convert text to hexadecimal and decode
+                            hex values back into readable text.
                         </p>
 
 

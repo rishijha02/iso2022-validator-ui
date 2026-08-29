@@ -8,6 +8,9 @@ import XmlToJsonPage from "./pages/XmlToJsonPage";
 import DocumentationPage from "./pages/DocumentationPage";
 import DeveloperToolsPage from "./pages/DeveloperToolsPage";
 import IdentifierValidatorPage from "./pages/IdentifierValidatorPage";
+import Base64ToolPage from "./pages/Base64ToolPage";
+import UuidGeneratorPage from "./pages/UuidGeneratorPage";
+import HexEncoderDecoderPage from "./pages/HexEncoderDecoderPage";
 
 import "./App.css";
 
@@ -50,9 +53,24 @@ function App() {
      element={<DeveloperToolsPage />}
       />
        <Route
-    path="/developer-tools/identifier-validator"
-    element={<IdentifierValidatorPage />}
-  />
+          path="/developer-tools/identifier-validator"
+          element={<IdentifierValidatorPage />}
+        />
+
+        <Route
+          path="/developer-tools/base64"
+          element={<Base64ToolPage />}
+      />
+
+      <Route
+          path="/developer-tools/uuid-generator"
+          element={<UuidGeneratorPage />}
+      />
+
+      <Route
+      path="/developer-tools/hex-encoder-decoder"
+      element={<HexEncoderDecoderPage />}
+    />
 
       </Routes>
     </BrowserRouter>

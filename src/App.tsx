@@ -11,6 +11,12 @@ import IdentifierValidatorPage from "./pages/IdentifierValidatorPage";
 import Base64ToolPage from "./pages/Base64ToolPage";
 import UuidGeneratorPage from "./pages/UuidGeneratorPage";
 import HexEncoderDecoderPage from "./pages/HexEncoderDecoderPage";
+import MessageGeneratorPage from "./pages/MessageGeneratorPage";
+import HomePage from "./pages/HomePage";
+import BlogPage from "./pages/BlogPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import AdminBlogPage from "./pages/AdminBlogPage";
 
 import "./App.css";
 
@@ -25,8 +31,22 @@ function App() {
 
         <Route
           path="/"
+          element={<HomePage />}
+        />
+
+        <Route
+          path="/validator"
           element={<ValidatorPage />}
         />
+
+        <Route
+          path="/blog/:slug"
+          element={<BlogPage />}
+        />
+
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/admin/blogs" element={<AdminBlogPage />} />
 
         <Route
           path="/summary"
@@ -70,6 +90,11 @@ function App() {
       <Route
       path="/developer-tools/hex-encoder-decoder"
       element={<HexEncoderDecoderPage />}
+    />
+
+    <Route
+    path="/message-generator"
+     element={<MessageGeneratorPage />}
     />
 
       </Routes>

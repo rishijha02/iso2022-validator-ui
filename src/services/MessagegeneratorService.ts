@@ -1,28 +1,41 @@
+import type {
+  MessageGenerationRequest,
+  MessageGenerationResponse
+} from "../types/messagegenerator";
+
 import { API_BASE_URL } from "../config/api";
-import type { Pacs008FormData } from "../types/messagegenerator";
 
-const API_URL = `${API_BASE_URL}/v1/api/message-generator/pacs008`;
 
-export async function generatePacs008Message(
-  formData: Pacs008FormData
-): Promise<string> {
+const API_URL =
+  `${API_BASE_URL}/v1/api/messages/generate`;
 
-  const response = await fetch(API_URL, {
-    method: "POST",
+export async function generateMessage(
+  request: MessageGenerationRequest,
+  geography: string
+): Promise<MessageGenerationResponse> {
 
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/xml",
-    },
+  const response = await fetch(
+    `${API_URL}?geography=${encodeURIComponent(geography)}`,
+    {
+      method: "POST",
 
-    body: JSON.stringify(formData),
-  });
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+
+      body: JSON.stringify(request)
+    }
+  );
+
 
   if (!response.ok) {
+
     throw new Error(
-      `Message generator API returned ${response.status}`
+      `Message generation API returned ${response.status}`
     );
   }
 
-  return await response.text();
+
+  return await response.json();
 }

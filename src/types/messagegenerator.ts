@@ -1,7 +1,6 @@
-export type ClearingScheme = "SEPA" | "CBPR_PLUS" | "GENERIC";
+export interface MessageGenerationRequest {
 
-export interface Pacs008FormData {
-  clearingScheme: ClearingScheme;
+  messageType: string;
 
   debtorName: string;
   debtorIban: string;
@@ -14,22 +13,21 @@ export interface Pacs008FormData {
   amount: string;
   currency: string;
 
-  remittanceInfo: string;
+  endToEndId?: string;
 }
 
-export const emptyPacs008FormData: Pacs008FormData = {
-  clearingScheme: "GENERIC",
 
-  debtorName: "",
-  debtorIban: "",
-  debtorBic: "",
+export interface MessageGenerationResponse {
 
-  creditorName: "",
-  creditorIban: "",
-  creditorBic: "",
+  success: boolean;
 
-  amount: "",
-  currency: "EUR",
+  messageType: string;
 
-  remittanceInfo: "",
-};
+  geography: string;
+
+  version: string;
+
+  xml: string | null;
+
+  error: string | null;
+}

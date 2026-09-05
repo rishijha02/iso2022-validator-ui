@@ -251,33 +251,29 @@ function DeveloperToolsPage() {
 
                     {/* Future Tool */}
 
-                    <div className="tool-card tool-card-disabled">
+                    <Link
+                        to="/message-generator"
+                        className="tool-card"
+                        >
 
                         <div className="tool-icon">
-
-                            ⚡
-
+                            🏗️
                         </div>
 
-
                         <h2>
-                            ISO 20022 Sample Generator
+                            ISO 20022 Message Generator
                         </h2>
 
-
                         <p>
-                            Generate sample ISO 20022 messages
-                            for testing and development.
+                            Generate ISO 20022 payment messages
+                            using simple business-level inputs.
                         </p>
 
-
-                        <span className="coming-soon">
-
-                            Coming Soon
-
+                        <span className="tool-link">
+                            Open Tool →
                         </span>
 
-                    </div>
+                        </Link>
 
 
                 </section>

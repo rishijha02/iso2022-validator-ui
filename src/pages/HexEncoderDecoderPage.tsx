@@ -169,7 +169,7 @@ function HexEncoderDecoderPage() {
                 <nav>
 
                     <Link to="/">
-                        Validator
+                        Home
                     </Link>
 
                     <Link

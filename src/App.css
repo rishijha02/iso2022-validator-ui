@@ -3606,3 +3606,124 @@
   .admin-row-actions { justify-content: flex-start; }
   .auth-card { padding: 25px; }
 }
+
+/* Phase 1 - Blog cover images */
+.home-blog-cover {
+  display: block;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  border: 1px solid #e2e8f0;
+}
+.blog-cover-image {
+  display: block;
+  width: 100%;
+  max-height: 430px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  border: 1px solid #e2e8f0;
+}
+.admin-cover-preview {
+  display: block;
+  width: min(420px, 100%);
+  max-height: 220px;
+  object-fit: cover;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+.admin-row-cover {
+  display: block;
+  width: 150px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Phase 2 - blog article / markdown editor */
+.blog-markdown {
+  margin-top: 30px;
+  color: #334155;
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.blog-markdown > :first-child { margin-top: 0; }
+.blog-markdown > :last-child { margin-bottom: 0; }
+.blog-markdown p { margin: 0 0 20px; }
+.blog-markdown h2,
+.blog-markdown h3,
+.blog-markdown h4 { color: #0f172a; line-height: 1.3; letter-spacing: -.02em; }
+.blog-markdown h2 { margin: 38px 0 14px; font-size: 28px; }
+.blog-markdown h3 { margin: 30px 0 12px; font-size: 22px; }
+.blog-markdown h4 { margin: 24px 0 10px; font-size: 18px; }
+.blog-markdown ul,
+.blog-markdown ol { margin: 0 0 22px; padding-left: 26px; }
+.blog-markdown li { margin: 7px 0; padding-left: 3px; }
+.blog-markdown blockquote {
+  margin: 24px 0;
+  padding: 4px 0 4px 20px;
+  border-left: 3px solid #6366f1;
+  color: #64748b;
+  background: #f8fafc;
+}
+.blog-markdown blockquote p { margin: 8px 0; }
+.blog-markdown hr { border: 0; border-top: 1px solid #e2e8f0; margin: 34px 0; }
+.blog-markdown a { color: #4f46e5; font-weight: 600; text-decoration: none; }
+.blog-markdown a:hover { text-decoration: underline; }
+.blog-markdown code {
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: #f1f5f9;
+  color: #4338ca;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: .9em;
+}
+.blog-markdown pre {
+  overflow-x: auto;
+  margin: 24px 0;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #e2e8f0;
+  line-height: 1.65;
+}
+.blog-markdown pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+}
+.blog-content-image {
+  display: block;
+  width: min(100%, 820px);
+  max-height: 560px;
+  object-fit: contain;
+  margin: 26px auto;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+.admin-content-editor { display: flex; flex-direction: column; gap: 10px; }
+.admin-content-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.admin-content-toolbar > div:first-child { display: flex; flex-direction: column; gap: 3px; color: #334155; font-size: 13px; }
+.admin-content-toolbar > div:first-child span { color: #94a3b8; font-size: 11px; font-weight: 500; }
+.admin-content-tabs { display: flex; gap: 4px; padding: 3px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; }
+.admin-content-tabs button { border: 0; border-radius: 6px; padding: 6px 12px; background: transparent; color: #64748b; cursor: pointer; font: inherit; font-size: 12px; }
+.admin-content-tabs button.active { background: white; color: #0f172a; box-shadow: 0 1px 3px rgba(15,23,42,.08); font-weight: 700; }
+.admin-content-preview { min-height: 420px; padding: 24px; border: 1px solid #cbd5e1; border-radius: 9px; background: white; }
+.admin-content-preview .blog-markdown { margin-top: 0; }
+.admin-preview-empty { color: #94a3b8; font-size: 13px; }
+.admin-markdown-help { display: flex; flex-wrap: wrap; gap: 7px; color: #64748b; font-size: 11px; }
+.admin-markdown-help code { padding: 3px 6px; border-radius: 5px; background: #f1f5f9; color: #475569; }
+@media (max-width: 600px) {
+  .admin-content-toolbar { align-items: flex-start; flex-direction: column; }
+  .admin-content-preview { padding: 18px; }
+  .blog-markdown { font-size: 15px; }
+}

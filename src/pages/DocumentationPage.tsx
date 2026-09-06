@@ -35,6 +35,10 @@ function DocumentationPage() {
 
         <nav>
 
+          <Link to="/">
+            Home
+          </Link>
+
           <Link to="/documentation">
             Documentation
           </Link>

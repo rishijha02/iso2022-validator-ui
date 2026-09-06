@@ -253,6 +253,10 @@ function XmlToJsonPage() {
 
                 <nav>
 
+                    <a href="/">
+                        Home
+                    </a>
+
                     <a href="/xml-to-json">
                         XML to JSON
                     </a>

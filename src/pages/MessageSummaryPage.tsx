@@ -115,7 +115,7 @@ function MessageSummaryPage() {
             className="back-button"
             onClick={() => navigate("/")}
           >
-            ← Back to Validator
+            ← Home
           </button>
 
         </div>
@@ -280,7 +280,7 @@ function MessageSummaryPage() {
                 onClick={() => navigate("/")}
               >
 
-                ← Back to Validator
+                ← Home
 
               </button>
 

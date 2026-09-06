@@ -9,6 +9,7 @@ export interface BlogRequest {
   category: string;
   author: string;
   published: boolean;
+  coverImageUrl : string;
 }
 
 async function parseError(response: Response, fallback: string) {

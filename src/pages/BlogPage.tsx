@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getBlogBySlug, type Blog } from "../services/blogService";
+import MarkdownContent from "../components/MarkdownContent";
 
 function BlogPage() {
   const { slug = "" } = useParams();
@@ -46,6 +47,9 @@ function BlogPage() {
 
         {!loading && !error && blog && (
           <article className="blog-article">
+            {blog.coverImageUrl && (
+              <img className="blog-cover-image" src={blog.coverImageUrl} alt={blog.title} />
+            )}
             <span className="home-blog-category">{blog.category || "FINTECH"}</span>
             <h1>{blog.title}</h1>
             <p className="blog-article-summary">{blog.summary}</p>
@@ -61,7 +65,7 @@ function BlogPage() {
                   : ""}
               </span>
             </div>
-            <div className="blog-article-content">{blog.content}</div>
+            <MarkdownContent content={blog.content} />
           </article>
         )}
       </main>

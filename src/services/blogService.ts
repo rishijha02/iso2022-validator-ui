@@ -12,6 +12,7 @@ export interface Blog {
   publishedAt: string;
   createdAt?: string;
   updatedAt?: string;
+  coverImageUrl: string;
 }
 
 export async function getBlogs(): Promise<Blog[]> {

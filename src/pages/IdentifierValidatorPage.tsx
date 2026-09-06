@@ -141,7 +141,7 @@ function IdentifierValidatorPage() {
         <nav>
 
           <Link to="/">
-            Validator
+            Home
           </Link>
 
           <Link to="/developer-tools">

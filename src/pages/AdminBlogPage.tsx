@@ -6,6 +6,20 @@ import { clearSession, getRole, getToken, getUsername } from "../services/authSe
 
 const emptyForm: BlogRequest = { title: "", slug: "", summary: "", content: "", category: "Payments", author: "", published: false };
 
+/**
+ * Converts free text into a URL-safe slug:
+ * "What happens inside the HSM?" -> "what-happens-inside-the-hsm"
+ */
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")   // strip punctuation (?, !, ., etc.)
+    .replace(/[\s_]+/g, "-")    // spaces/underscores -> hyphen
+    .replace(/-+/g, "-")        // collapse repeated hyphens
+    .replace(/^-+|-+$/g, "");   // trim leading/trailing hyphens
+}
+
 function AdminBlogPage() {
   const token = getToken();
   const role = getRole().toUpperCase();
@@ -15,6 +29,10 @@ function AdminBlogPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  // Tracks whether the admin has manually typed into the Slug field.
+  // Until they do, the slug auto-follows the Title field.
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   useEffect(() => {
     if (!token || role !== "ADMIN") return;
@@ -27,26 +45,60 @@ function AdminBlogPage() {
     setForm((current) => ({ ...current, [key]: value }));
   }
 
+  function handleTitleChange(value: string) {
+    setForm((current) => ({
+      ...current,
+      title: value,
+      // auto-derive the slug from the title until the admin overrides it
+      slug: slugManuallyEdited ? current.slug : slugify(value),
+    }));
+  }
+
+  function handleSlugChange(value: string) {
+    setSlugManuallyEdited(true);
+    change("slug", value);
+  }
+
   function startEdit(blog: Blog) {
     setEditingId(blog.id);
     setForm({ title: blog.title, slug: blog.slug, summary: blog.summary || "", content: blog.content, category: blog.category || "", author: blog.author || "", published: blog.published });
+    // editing an existing post: treat its slug as intentional so
+    // tweaking the title doesn't silently change a published URL
+    setSlugManuallyEdited(true);
     setMessage("");
     setError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function resetForm() { setEditingId(null); setForm(emptyForm); setMessage(""); setError(""); }
+  function resetForm() {
+    setEditingId(null);
+    setForm(emptyForm);
+    setSlugManuallyEdited(false);
+    setMessage("");
+    setError("");
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setLoading(true); setMessage(""); setError("");
+
+    // Sanitize right before sending — a safety net regardless of
+    // whatever ended up in the Slug field.
+    const payload: BlogRequest = { ...form, slug: slugify(form.slug) };
+
+    if (!payload.slug) {
+      setError("Slug cannot be empty — check the title or slug field.");
+      setLoading(false);
+      return;
+    }
+
     try {
       if (editingId === null) {
-        const created = await createBlog(token!, form);
+        const created = await createBlog(token!, payload);
         setBlogs((current) => [created, ...current]);
         setMessage("Blog created successfully.");
       } else {
-        const updated = await updateBlog(token!, editingId, form);
+        const updated = await updateBlog(token!, editingId, payload);
         setBlogs((current) => current.map((blog) => blog.id === editingId ? updated : blog));
         setMessage("Blog updated successfully.");
       }
@@ -61,6 +113,8 @@ function AdminBlogPage() {
     catch (err) { setError(err instanceof Error ? err.message : "Unable to delete blog"); }
   }
 
+  const slugPreview = slugify(form.slug);
+
   return (
     <div className="admin-page">
       <header className="admin-header">
@@ -74,8 +128,16 @@ function AdminBlogPage() {
         <section className="admin-editor-card">
           <form onSubmit={handleSubmit} className="admin-blog-form">
             <div className="admin-form-grid">
-              <label>Title<input value={form.title} onChange={(e) => change("title", e.target.value)} required /></label>
-              <label>Slug<input value={form.slug} onChange={(e) => change("slug", e.target.value)} placeholder="why-real-time-payments-matter" required /></label>
+              <label>Title<input value={form.title} onChange={(e) => handleTitleChange(e.target.value)} required /></label>
+              <label>
+                Slug
+                <input value={form.slug} onChange={(e) => handleSlugChange(e.target.value)} placeholder="why-real-time-payments-matter" required />
+                {form.slug && slugPreview !== form.slug && (
+                  <small style={{ display: "block", marginTop: 4, opacity: 0.65 }}>
+                    Will be saved as: {slugPreview || "(empty — check title)"}
+                  </small>
+                )}
+              </label>
               <label>Category<input value={form.category} onChange={(e) => change("category", e.target.value)} /></label>
               <label>Author<input value={form.author} onChange={(e) => change("author", e.target.value)} /></label>
             </div>

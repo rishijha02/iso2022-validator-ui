@@ -14,6 +14,7 @@ export interface MessageGenerationRequest {
   currency: string;
 
   endToEndId?: string;
+  version?: string;
 }
 
 

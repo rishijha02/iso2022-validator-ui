@@ -75,40 +75,6 @@ const messageData: Record<MessageFamily, MessageData> = {
 
 const familyOrder: MessageFamily[] = ["pacs", "pain", "camt"];
 
-/**
- * Builds a minimal starter XML for a given ISO 20022 version — correct
- * root element and namespace, with a comment marking it as a skeleton.
- * This is NOT a fully populated, schema-valid message (the actual body
- * differs per message type and would need the real XSD to generate
- * accurately) — it's a starting point to test against the validator.
- */
-function buildSampleXml(messageType: string, version: string): string {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<Document xmlns="urn:iso:std:iso:20022:tech:xsd:${version}">
-  <!--
-    Starter skeleton for ${messageType} (${version}).
-    This is not a complete, schema-valid message — replace this
-    comment with the actual message body for your use case.
-  -->
-</Document>
-`;
-}
-
-function downloadSample(messageType: string, version: string) {
-  const xml = buildSampleXml(messageType, version);
-  const blob = new Blob([xml], { type: "application/xml" });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${version}-sample.xml`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-
-  URL.revokeObjectURL(url);
-}
-
 function SupportedMessagesPage() {
 
   const navigate = useNavigate();
@@ -135,7 +101,7 @@ function SupportedMessagesPage() {
         <p>
           Browse ISO 20022 message families,
           message types and available versions.
-          Each version includes a downloadable starter XML.
+          Each version can be opened directly in the message generator, where you can generate a default message or enter custom inputs.
         </p>
 
 
@@ -183,9 +149,14 @@ function SupportedMessagesPage() {
                             type="button"
                             className="version-download-link"
                             onClick={() =>
-                              downloadSample(messageType, version)
+                              navigate("/message-generator", {
+                                state: {
+                                  messageType,
+                                  version: version.replace(`${messageType}.`, "")
+                                }
+                              })
                             }
-                            title={`Download a starter XML for ${version}`}
+                            title={`Open generator for ${version}`}
                           >
                             <svg
                               width="13"
@@ -197,11 +168,10 @@ function SupportedMessagesPage() {
                               strokeLinecap="round"
                               strokeLinejoin="round"
                             >
-                              <path d="M12 3v12" />
-                              <path d="M7 10l5 5 5-5" />
-                              <path d="M5 21h14" />
+                              <path d="M5 12h14" />
+                              <path d="M13 6l6 6-6 6" />
                             </svg>
-                            Download sample
+                            Generate message
                           </button>
 
                         </div>

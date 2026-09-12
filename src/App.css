@@ -3727,3 +3727,211 @@
   .admin-content-preview { padding: 18px; }
   .blog-markdown { font-size: 15px; }
 }
+
+/* =========================================
+   MESSAGE GENERATOR - MODES & IDENTIFIERS
+========================================= */
+
+.generator-mode-section {
+    padding-bottom: 28px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.generator-mode-section h2 {
+    margin-bottom: 6px;
+}
+
+.generator-mode-description {
+    margin: 0 0 18px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.generator-mode-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.generator-mode-option {
+    text-align: left;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 18px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.generator-mode-option strong {
+    font-size: 15px;
+    color: #111827;
+}
+
+.generator-mode-option span {
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.generator-mode-option:hover {
+    border-color: #6366f1;
+}
+
+.generator-mode-option.active {
+    border-color: #6366f1;
+    background: #f5f3ff;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.08);
+}
+
+.default-message-preview {
+    padding: 22px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #f8fafc;
+    margin-bottom: 28px;
+}
+
+.default-message-preview h2 {
+    margin: 0 0 16px;
+    font-size: 18px;
+}
+
+.default-message-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.default-message-grid > div {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.default-message-grid span {
+    font-size: 12px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.default-message-grid strong {
+    font-size: 14px;
+    color: #111827;
+}
+
+.default-message-grid small {
+    font-size: 12px;
+    color: #6b7280;
+    word-break: break-word;
+}
+
+.default-message-note {
+    margin: 14px 0 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.identifier-status {
+    font-size: 12px;
+    line-height: 1.4;
+    min-height: 17px;
+}
+
+.identifier-status.loading {
+    color: #6b7280;
+}
+
+.identifier-status.valid {
+    color: #15803d;
+    font-weight: 600;
+}
+
+.identifier-status.invalid {
+    color: #b91c1c;
+    font-weight: 500;
+}
+
+@media (max-width: 800px) {
+    .generator-mode-grid,
+    .default-message-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.generator-support-note {
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================================
+   MOBILE RESPONSIVE FIXES
+========================================= */
+@media (max-width: 768px) {
+
+  /* 1. Header & Navigation Stacking */
+  .header {
+    height: auto;
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .header nav {
+    width: 100%;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .header nav a {
+    font-size: 13px;
+  }
+
+  /* 2. Validation Profile Card */
+  .validation-profile-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .profile-select-wrapper select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* 3. XML Editor Card Header & Buttons */
+  .editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .editor-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .editor-actions button {
+    flex: 1;
+    white-space: nowrap;
+  }
+}

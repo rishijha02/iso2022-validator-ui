@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   generateMessage
@@ -12,6 +12,15 @@ import {
 import {
   validateWithCustomXsd
 } from "../services/customxsdService";
+
+import {
+  validateIban,
+  validateBic
+} from "../services/identifierValidatorService";
+
+import type {
+  IdentifierValidationResponse
+} from "../types/identifier";
 
 import XmlEditor from "../components/XmlEditor";
 import ValidationResult from "../components/ValidationResult";
@@ -69,12 +78,54 @@ function formatXml(xml: string): string {
 }
 
 
+type GenerationMode = "DEFAULT" | "CUSTOM";
+type IdentifierField = "debtorIban" | "debtorBic" | "creditorIban" | "creditorBic";
+type IdentifierState = {
+  status: "idle" | "loading" | "valid" | "invalid";
+  message?: string;
+};
+
+const DEFAULT_VALUES = {
+  debtorName: "John Doe",
+  debtorIban: "DE89370400440532013000",
+  debtorBic: "COBADEFFXXX",
+  creditorName: "Jane Smith",
+  creditorIban: "FR7630006000011234567890189",
+  creditorBic: "AGRIFRPPXXX",
+  amount: "1000.00",
+  currency: "EUR",
+  endToEndId: "E2E-DEMO-001"
+};
+
+const PACS_008_VERSIONS = [
+  "001.09",
+  "001.10",
+  "001.11",
+  "001.12",
+  "001.13",
+  "001.14"
+];
+
 function MessageGeneratorPage() {
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const navigationState = location.state as {
+    messageType?: string;
+    version?: string;
+  } | null;
 
   const [messageType, setMessageType] =
-    useState("pacs.008");
+    useState(navigationState?.messageType ?? "pacs.008");
+
+  const [selectedVersion, setSelectedVersion] =
+    useState(navigationState?.version ?? "001.14");
+
+  const [generationMode, setGenerationMode] =
+    useState<GenerationMode>(navigationState?.messageType ? "DEFAULT" : "CUSTOM");
+
+  const generatorSupported = messageType === "pacs.008";
 
   const [geography, setGeography] =
     useState("ISO");
@@ -96,6 +147,14 @@ function MessageGeneratorPage() {
 
   const [creditorBic, setCreditorBic] =
     useState("");
+
+  const [identifierStates, setIdentifierStates] =
+    useState<Record<IdentifierField, IdentifierState>>({
+      debtorIban: { status: "idle" },
+      debtorBic: { status: "idle" },
+      creditorIban: { status: "idle" },
+      creditorBic: { status: "idle" }
+    });
 
   const [amount, setAmount] =
     useState("");
@@ -141,29 +200,186 @@ function MessageGeneratorPage() {
     useState("");
 
 
+  useEffect(() => {
+    const state = location.state as {
+      messageType?: string;
+      version?: string;
+    } | null;
+
+    if (state?.messageType) {
+      setMessageType(state.messageType);
+    }
+
+    if (state?.version) {
+      setSelectedVersion(state.version);
+    }
+  }, [location.key, location.state]);
+
+
+  const validateIdentifierField = async (
+    field: IdentifierField,
+    value: string
+  ) => {
+
+    const normalized = value.trim();
+
+    const isIban = field.toLowerCase().includes("iban");
+    const minimumLength = isIban ? 15 : 8;
+
+    if (!normalized || normalized.length < minimumLength) {
+      setIdentifierStates((current) => ({
+        ...current,
+        [field]: { status: "idle" }
+      }));
+      return;
+    }
+
+    setIdentifierStates((current) => ({
+      ...current,
+      [field]: { status: "loading" }
+    }));
+
+    try {
+      const response: IdentifierValidationResponse =
+        isIban
+          ? await validateIban(normalized)
+          : await validateBic(normalized);
+
+      setIdentifierStates((current) => ({
+        ...current,
+        [field]: {
+          status: response.valid ? "valid" : "invalid",
+          message: response.message
+        }
+      }));
+
+    } catch (error) {
+
+      console.error(`Identifier validation failed for ${field}:`, error);
+
+      setIdentifierStates((current) => ({
+        ...current,
+        [field]: {
+          status: "invalid",
+          message: "Unable to validate right now."
+        }
+      }));
+    }
+  };
+
+
+  useEffect(() => {
+    if (generationMode !== "CUSTOM") return;
+    const timer = window.setTimeout(() => {
+      void validateIdentifierField("debtorIban", debtorIban);
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [debtorIban, generationMode]);
+
+
+  useEffect(() => {
+    if (generationMode !== "CUSTOM") return;
+    const timer = window.setTimeout(() => {
+      void validateIdentifierField("debtorBic", debtorBic);
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [debtorBic, generationMode]);
+
+
+  useEffect(() => {
+    if (generationMode !== "CUSTOM") return;
+    const timer = window.setTimeout(() => {
+      void validateIdentifierField("creditorIban", creditorIban);
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [creditorIban, generationMode]);
+
+
+  useEffect(() => {
+    if (generationMode !== "CUSTOM") return;
+    const timer = window.setTimeout(() => {
+      void validateIdentifierField("creditorBic", creditorBic);
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [creditorBic, generationMode]);
+
+
+  const getIdentifierStatus = (field: IdentifierField) => {
+    const state = identifierStates[field];
+
+    if (state.status === "loading") {
+      return <span className="identifier-status loading">Checking...</span>;
+    }
+
+    if (state.status === "valid") {
+      return <span className="identifier-status valid">✓ Valid</span>;
+    }
+
+    if (state.status === "invalid") {
+      return (
+        <span className="identifier-status invalid">
+          ✕ {state.message || "Invalid value"}
+        </span>
+      );
+    }
+
+    return null;
+  };
+
+
+  const isCustomIdentifiersValid =
+    identifierStates.debtorIban.status === "valid" &&
+    identifierStates.debtorBic.status === "valid" &&
+    identifierStates.creditorIban.status === "valid" &&
+    identifierStates.creditorBic.status === "valid";
+
+
   const handleGenerate = async () => {
 
-    if (
-      !debtorName.trim() ||
-      !debtorIban.trim() ||
-      !debtorBic.trim()
-    ) {
-      alert("Please enter debtor details.");
-      return;
-    }
+    const values =
+      generationMode === "DEFAULT"
+        ? DEFAULT_VALUES
+        : {
+            debtorName,
+            debtorIban,
+            debtorBic,
+            creditorName,
+            creditorIban,
+            creditorBic,
+            amount,
+            currency,
+            endToEndId
+          };
 
-    if (
-      !creditorName.trim() ||
-      !creditorIban.trim() ||
-      !creditorBic.trim()
-    ) {
-      alert("Please enter creditor details.");
-      return;
-    }
+    if (generationMode === "CUSTOM") {
 
-    if (!amount.trim()) {
-      alert("Please enter amount.");
-      return;
+      if (
+        !debtorName.trim() ||
+        !debtorIban.trim() ||
+        !debtorBic.trim()
+      ) {
+        alert("Please enter debtor details.");
+        return;
+      }
+
+      if (
+        !creditorName.trim() ||
+        !creditorIban.trim() ||
+        !creditorBic.trim()
+      ) {
+        alert("Please enter creditor details.");
+        return;
+      }
+
+      if (!amount.trim()) {
+        alert("Please enter amount.");
+        return;
+      }
+
+      if (!isCustomIdentifiersValid) {
+        alert("Please enter valid debtor and creditor IBAN/BIC values.");
+        return;
+      }
     }
 
     setLoading(true);
@@ -177,18 +393,19 @@ function MessageGeneratorPage() {
           {
             messageType,
 
-            debtorName,
-            debtorIban,
-            debtorBic,
+            debtorName: values.debtorName,
+            debtorIban: values.debtorIban,
+            debtorBic: values.debtorBic,
 
-            creditorName,
-            creditorIban,
-            creditorBic,
+            creditorName: values.creditorName,
+            creditorIban: values.creditorIban,
+            creditorBic: values.creditorBic,
 
-            amount,
-            currency,
+            amount: values.amount,
+            currency: values.currency,
 
-            endToEndId
+            endToEndId: values.endToEndId,
+            version: selectedVersion
           },
 
           geography
@@ -499,6 +716,41 @@ function MessageGeneratorPage() {
 
         <section className="generator-card">
 
+          <div className="generator-mode-section">
+            <h2>Generation Mode</h2>
+            <p className="generator-mode-description">
+              Choose a ready-to-use demo message or enter your own payment details.
+            </p>
+
+            <div className="generator-mode-grid">
+              <button
+                type="button"
+                className={`generator-mode-option ${generationMode === "DEFAULT" ? "active" : ""}`}
+                onClick={() => {
+                  setGenerationMode("DEFAULT");
+                  setResult(null);
+                  setValidationResult(null);
+                }}
+              >
+                <strong>Default Message</strong>
+                <span>Generate using safe sample payment data.</span>
+              </button>
+
+              <button
+                type="button"
+                className={`generator-mode-option ${generationMode === "CUSTOM" ? "active" : ""}`}
+                onClick={() => {
+                  setGenerationMode("CUSTOM");
+                  setResult(null);
+                  setValidationResult(null);
+                }}
+              >
+                <strong>Custom Inputs</strong>
+                <span>Enter your own debtor, creditor and payment details.</span>
+              </button>
+            </div>
+          </div>
+
           {/* Message Configuration */}
 
           <div className="generator-section">
@@ -506,6 +758,12 @@ function MessageGeneratorPage() {
             <h2>
               Message Configuration
             </h2>
+
+            {!generatorSupported && (
+              <div className="generator-support-note">
+                Generation for {messageType} is not available yet. The selected version is preserved so you can use this page when its generator is added.
+              </div>
+            )}
 
             <div className="generator-grid">
 
@@ -538,6 +796,37 @@ function MessageGeneratorPage() {
                     (Coming Soon)
                   </option>
 
+                </select>
+
+              </div>
+
+
+              <div className="form-group">
+
+                <label>
+                  Message Version
+                </label>
+
+                <select
+                  value={selectedVersion}
+                  onChange={(e) => {
+                    setSelectedVersion(e.target.value);
+                    setResult(null);
+                    setValidationResult(null);
+                  }}
+                  disabled={messageType !== "pacs.008"}
+                >
+                  {messageType === "pacs.008" ? (
+                    PACS_008_VERSIONS.map((version) => (
+                      <option key={version} value={version}>
+                        pacs.008.{version}
+                      </option>
+                    ))
+                  ) : (
+                    <option value={selectedVersion}>
+                      {messageType}.{selectedVersion}
+                    </option>
+                  )}
                 </select>
 
               </div>
@@ -580,6 +869,9 @@ function MessageGeneratorPage() {
 
           </div>
 
+
+          {generationMode === "CUSTOM" ? (
+            <>
 
           {/* Debtor */}
 
@@ -625,6 +917,7 @@ function MessageGeneratorPage() {
                   }
                   placeholder="DE89370400440532013000"
                 />
+                {getIdentifierStatus("debtorIban")}
 
               </div>
 
@@ -644,6 +937,7 @@ function MessageGeneratorPage() {
                   }
                   placeholder="COBADEFFXXX"
                 />
+                {getIdentifierStatus("debtorBic")}
 
               </div>
 
@@ -696,6 +990,7 @@ function MessageGeneratorPage() {
                   }
                   placeholder="FR7630006000011234567890189"
                 />
+                {getIdentifierStatus("creditorIban")}
 
               </div>
 
@@ -715,6 +1010,7 @@ function MessageGeneratorPage() {
                   }
                   placeholder="AGRIFRPPXXX"
                 />
+                {getIdentifierStatus("creditorBic")}
 
               </div>
 
@@ -811,13 +1107,26 @@ function MessageGeneratorPage() {
 
           </div>
 
+            </>
+          ) : (
+            <div className="default-message-preview">
+              <h2>Default message data</h2>
+              <div className="default-message-grid">
+                <div><span>Debtor</span><strong>{DEFAULT_VALUES.debtorName}</strong><small>{DEFAULT_VALUES.debtorIban} • {DEFAULT_VALUES.debtorBic}</small></div>
+                <div><span>Creditor</span><strong>{DEFAULT_VALUES.creditorName}</strong><small>{DEFAULT_VALUES.creditorIban} • {DEFAULT_VALUES.creditorBic}</small></div>
+                <div><span>Payment</span><strong>{DEFAULT_VALUES.amount} {DEFAULT_VALUES.currency}</strong><small>{DEFAULT_VALUES.endToEndId}</small></div>
+              </div>
+              <p className="default-message-note">These sample values are used only for demonstration.</p>
+            </div>
+          )}
+
 
           <div className="generator-action">
 
             <button
               className="summary-button"
               onClick={handleGenerate}
-              disabled={loading}
+              disabled={loading || !generatorSupported}
             >
 
               {loading
@@ -854,6 +1163,7 @@ function MessageGeneratorPage() {
                     {result.geography}
                     {" • "}
                     version {result.version}
+                    {selectedVersion !== result.version ? ` • requested ${selectedVersion}` : ""}
 
                   </p>
 

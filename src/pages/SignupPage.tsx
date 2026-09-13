@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 
 import {  useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
@@ -36,6 +37,13 @@ function SignupPage() {
   }
 
   return (
+      <>
+      <SEO
+        title={'Sign Up | FintechSchema'}
+        description={'Create a FintechSchema account.'}
+        path={'/signup'}
+        noindex
+      />
     <div className="auth-page">
       <div className="auth-card auth-card-wide">
         <Link to="/" className="auth-brand"><span className="auth-brand-icon">ISO</span><span>ISO 20022 Validator</span></Link>
@@ -53,6 +61,7 @@ function SignupPage() {
         <Link to="/" className="auth-back">← Back to home</Link>
       </div>
     </div>
+  </>
   );
 }
 

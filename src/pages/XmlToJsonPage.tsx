@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEO from "../components/SEO";
 import { useNavigate } from "react-router-dom";
 
 function XmlToJsonPage() {
@@ -220,6 +221,12 @@ function XmlToJsonPage() {
 
 
     return (
+        <>
+        <SEO
+        title={'XML to JSON Converter | FintechSchema Developer Tools'}
+        description={'Convert XML data to JSON quickly with this free developer tool from FintechSchema. Useful for ISO 20022 and payment messaging workflows.'}
+        path={'/xml-to-json'}
+      />
 
         <div className="app">
 
@@ -406,6 +413,8 @@ function XmlToJsonPage() {
             </main>
 
         </div>
+
+    </>
 
     );
 

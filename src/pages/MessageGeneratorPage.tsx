@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -645,6 +646,12 @@ function MessageGeneratorPage() {
 
 
   return (
+      <>
+      <SEO
+        title={'ISO 20022 Message Generator | PACS, PAIN & CAMT'}
+        description={'Generate ISO 20022 payment messages with FintechSchema. Create PACS.008 messages with default or custom inputs and validate your data.'}
+        path={'/message-generator'}
+      />
 
     <div className="app">
 
@@ -1368,6 +1375,7 @@ function MessageGeneratorPage() {
       </main>
 
     </div>
+  </>
   );
 }
 

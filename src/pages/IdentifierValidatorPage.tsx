@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -105,6 +106,12 @@ function IdentifierValidatorPage() {
 
 
   return (
+      <>
+      <SEO
+        title={'IBAN & BIC Validator | FintechSchema'}
+        description={'Validate IBAN and BIC identifiers with FintechSchema developer tools. Check payment account and bank identifier formats quickly.'}
+        path={'/developer-tools/identifier-validator'}
+      />
 
     <div className="app">
 
@@ -444,6 +451,8 @@ function IdentifierValidatorPage() {
       </main>
 
     </div>
+
+  </>
 
   );
 

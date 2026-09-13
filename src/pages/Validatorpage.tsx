@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 
 import XmlEditor from "../components/XmlEditor";
@@ -314,6 +315,12 @@ function ValidatorPage() {
     };
 
     return (
+        <>
+        <SEO
+        title={'ISO 20022 XML Validator | Validate ISO 20022 Messages'}
+        description={'Validate ISO 20022 XML messages against schemas and identify structural and validation errors quickly. Built for payment and fintech developers.'}
+        path={'/validator'}
+      />
 
         <div className="app">
 
@@ -596,6 +603,8 @@ function ValidatorPage() {
             </main>
 
         </div>
+
+    </>
 
     );
 

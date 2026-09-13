@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEO from "../components/SEO";
 import { Link, useNavigate } from "react-router-dom";
 
 function Base64ToolPage() {
@@ -104,6 +105,12 @@ function Base64ToolPage() {
 
 
     return (
+        <>
+        <SEO
+        title={'Base64 Encoder & Decoder | FintechSchema'}
+        description={'Encode and decode Base64 text with this free developer tool from FintechSchema.'}
+        path={'/developer-tools/base64'}
+      />
 
         <div className="app">
 
@@ -341,6 +348,8 @@ function Base64ToolPage() {
             </main>
 
         </div>
+
+    </>
 
     );
 

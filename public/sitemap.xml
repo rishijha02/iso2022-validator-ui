@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://www.fintechschema.com/</loc></url>
+  <url><loc>https://www.fintechschema.com/validator</loc></url>
+  <url><loc>https://www.fintechschema.com/message-generator</loc></url>
+  <url><loc>https://www.fintechschema.com/supported-messages</loc></url>
+  <url><loc>https://www.fintechschema.com/xml-to-json</loc></url>
+  <url><loc>https://www.fintechschema.com/documentation</loc></url>
+  <url><loc>https://www.fintechschema.com/developer-tools</loc></url>
+  <url><loc>https://www.fintechschema.com/developer-tools/identifier-validator</loc></url>
+  <url><loc>https://www.fintechschema.com/developer-tools/base64</loc></url>
+  <url><loc>https://www.fintechschema.com/developer-tools/uuid-generator</loc></url>
+  <url><loc>https://www.fintechschema.com/developer-tools/hex-encoder-decoder</loc></url>
+  <url><loc>https://www.fintechschema.com/about</loc></url>
+</urlset>

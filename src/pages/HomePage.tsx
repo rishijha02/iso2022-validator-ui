@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { getBlogs, type Blog } from "../services/blogService";
@@ -52,6 +53,30 @@ function HomePage() {
   );
 
   return (
+      <>
+      <SEO
+        title="ISO 20022 Validator & Developer Tools | FintechSchema"
+        description="Validate, generate and explore ISO 20022 payment messages with FintechSchema. Free developer tools for ISO 20022 XML, IBAN, BIC and financial messaging."
+        path="/"
+        schema={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "FintechSchema",
+            url: "https://www.fintechschema.com",
+            logo: "https://www.fintechschema.com/favicon.svg"
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "FintechSchema ISO 20022 Developer Tools",
+            url: "https://www.fintechschema.com/",
+            applicationCategory: "DeveloperApplication",
+            operatingSystem: "Web",
+            description: "ISO 20022 validation, message generation and fintech developer tools."
+          }
+        ]}
+      />
     <div className="home-page">
       <header className="home-header">
         <Link to="/" className="home-brand">
@@ -138,6 +163,9 @@ function HomePage() {
             <div className="home-blog-grid">
               {latestBlogs.map((blog) => (
                 <article className="home-blog-card" key={blog.id}>
+                  {blog.coverImageUrl && (
+                    <img className="home-blog-cover" src={blog.coverImageUrl} alt="" />
+                  )}
                   <div className="home-blog-card-top">
                     <span className="home-blog-category">
                       {blog.category || "FINTECH"}
@@ -220,10 +248,11 @@ function HomePage() {
       </main>
 
       <footer className="home-footer">
-        <span>ISO 20022 Validator</span>
-        <span>Built for payment & fintech developers</span>
+        <span>© 2026 FintechSchema. All rights reserved.</span>
+        <span>ISO 20022 Validator · Built for payment & fintech developers</span>
       </footer>
     </div>
+  </>
   );
 }
 

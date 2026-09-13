@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useNavigate } from "react-router-dom";
 
 type MessageFamily = "pacs" | "pain" | "camt";
@@ -80,6 +81,12 @@ function SupportedMessagesPage() {
   const navigate = useNavigate();
 
   return (
+      <>
+      <SEO
+        title={'ISO 20022 Message Types & Versions | FintechSchema'}
+        description={'Explore supported ISO 20022 message families and versions, including PACS, PAIN and CAMT messages.'}
+        path={'/supported-messages'}
+      />
 
     <div className="supported-page">
 
@@ -194,6 +201,8 @@ function SupportedMessagesPage() {
       </div>
 
     </div>
+
+  </>
 
   );
 

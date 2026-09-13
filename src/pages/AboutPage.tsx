@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useNavigate } from "react-router-dom";
 
 function AboutPage() {
@@ -5,6 +6,12 @@ function AboutPage() {
   const navigate = useNavigate();
 
   return (
+      <>
+      <SEO
+        title={'About FintechSchema | ISO 20022 Developer Platform'}
+        description={'Learn about FintechSchema, a developer platform for ISO 20022 validation, message generation and fintech engineering tools.'}
+        path={'/about'}
+      />
 
     <div className="app">
 
@@ -313,6 +320,8 @@ function AboutPage() {
       </main>
 
     </div>
+
+  </>
 
   );
 

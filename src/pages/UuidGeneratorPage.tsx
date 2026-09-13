@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEO from "../components/SEO";
 import { Link, useNavigate } from "react-router-dom";
 
 function UuidGeneratorPage() {
@@ -81,6 +82,12 @@ function UuidGeneratorPage() {
 
 
     return (
+        <>
+        <SEO
+        title={'UUID Generator | FintechSchema Developer Tools'}
+        description={'Generate UUIDs quickly with this free developer tool for fintech and software developers.'}
+        path={'/developer-tools/uuid-generator'}
+      />
 
         <div className="app">
 
@@ -353,6 +360,8 @@ function UuidGeneratorPage() {
             </main>
 
         </div>
+
+    </>
 
     );
 

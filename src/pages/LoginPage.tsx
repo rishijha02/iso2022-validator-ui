@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import {  useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login, saveSession } from "../services/authService";
@@ -28,6 +29,13 @@ function LoginPage() {
   }
 
   return (
+      <>
+      <SEO
+        title={'Login | FintechSchema'}
+        description={'Sign in to your FintechSchema account.'}
+        path={'/login'}
+        noindex
+      />
     <div className="auth-page">
       <div className="auth-card">
         <Link to="/" className="auth-brand">
@@ -54,6 +62,7 @@ function LoginPage() {
         <Link to="/" className="auth-back">← Back to home</Link>
       </div>
     </div>
+  </>
   );
 }
 

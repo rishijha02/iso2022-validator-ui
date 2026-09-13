@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import {
   useLocation,
   useNavigate
@@ -87,6 +88,13 @@ function MessageSummaryPage() {
 
 
   return (
+      <>
+      <SEO
+        title={'ISO 20022 Message Summary | FintechSchema'}
+        description={'Inspect and understand ISO 20022 message structures with FintechSchema.'}
+        path={'/summary'}
+        noindex
+      />
 
     <div className="summary-page">
 
@@ -317,6 +325,8 @@ function MessageSummaryPage() {
       </div>
 
     </div>
+
+  </>
 
   );
 

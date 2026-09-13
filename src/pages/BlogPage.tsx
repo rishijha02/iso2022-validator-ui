@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getBlogBySlug, type Blog } from "../services/blogService";
@@ -17,6 +18,26 @@ function BlogPage() {
   }, [slug]);
 
   return (
+      <>
+      <SEO
+        title={blog ? `${blog.title} | FintechSchema` : "Fintech & ISO 20022 Blog | FintechSchema"}
+        description={blog?.summary || "Fintech engineering, ISO 20022, payments and banking technology articles from FintechSchema."}
+        path={`/blog/${slug}`}
+        noindex={Boolean(error)}
+        schema={blog ? {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: blog.title,
+          description: blog.summary,
+          author: {
+            "@type": "Person",
+            name: blog.author || "Fintech Engineering"
+          },
+          mainEntityOfPage: `https://www.fintechschema.com/blog/${slug}`,
+          image: blog.coverImageUrl ? [blog.coverImageUrl] : undefined,
+          datePublished: blog.publishedAt || blog.createdAt || undefined
+        } : undefined}
+      />
     <div className="blog-page">
       <header className="header">
         <Link to="/" className="logo" style={{ textDecoration: "none" }}>
@@ -70,6 +91,7 @@ function BlogPage() {
         )}
       </main>
     </div>
+  </>
   );
 }
 

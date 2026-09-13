@@ -1,10 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
+import SEO from "../components/SEO";
 
 function DeveloperToolsPage() {
 
     const navigate = useNavigate();
 
     return (
+        <>
+        <SEO
+        title={'Fintech Developer Tools | ISO 20022, IBAN, BIC & XML Tools'}
+        description={'Free fintech developer tools for ISO 20022, IBAN, BIC, XML, Base64, UUID and hexadecimal data processing.'}
+        path={'/developer-tools'}
+      />
 
         <div className="app">
 
@@ -300,6 +307,8 @@ function DeveloperToolsPage() {
             </main>
 
         </div>
+
+    </>
 
     );
 

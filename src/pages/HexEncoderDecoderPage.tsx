@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEO from "../components/SEO";
 import { Link, useNavigate } from "react-router-dom";
 
 type HexMode = "encode" | "decode";
@@ -135,6 +136,12 @@ function HexEncoderDecoderPage() {
 
 
     return (
+        <>
+        <SEO
+        title={'Hex Encoder & Decoder | FintechSchema'}
+        description={'Convert text to hexadecimal and decode hexadecimal data with this free developer tool from FintechSchema.'}
+        path={'/developer-tools/hex-encoder-decoder'}
+      />
 
         <div className="app">
 
@@ -376,6 +383,8 @@ function HexEncoderDecoderPage() {
             </main>
 
         </div>
+
+    </>
 
     );
 

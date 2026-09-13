@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { createBlog, deleteBlog, updateBlog, type BlogRequest } from "../services/adminBlogService";
@@ -120,6 +121,13 @@ function AdminBlogPage() {
   const slugPreview = slugify(form.slug);
 
   return (
+      <>
+      <SEO
+        title={'Admin Blog Management | FintechSchema'}
+        description={'Manage FintechSchema blog content.'}
+        path={'/admin/blogs'}
+        noindex
+      />
     <div className="admin-page">
       <header className="admin-header">
         <Link to="/" className="home-brand"><span className="home-brand-icon">ISO</span><span><strong>ISO 20022 Validator</strong><small>Admin workspace</small></span></Link>
@@ -159,21 +167,7 @@ function AdminBlogPage() {
                 </div>
               </div>
               {!previewContent ? (
-                <textarea rows={18} value={form.content} onChange={(e) => change("content", e.target.value)} 
-                placeholder={
-                '# How does an HSM protect payment keys?\n\n' +
-                'Write your article here...\n\n' +
-                '## Key management\n\n' +
-                '- LMK\n' +
-                '- ZMK\n' +
-                '- ZPK\n\n' +
-                '```java\n' +
-                'String example = "payment";\n' +
-                '```\n\n' +
-                '![HSM architecture](https://example.com/hsm.png)'
-              }
-
-                required />
+                <textarea rows={18} value={form.content} onChange={(e) => change("content", e.target.value)} placeholder={`# How does an HSM protect payment keys?\n\nWrite your article here...\n\n## Key management\n\n- LMK\n- ZMK\n- ZPK\n\n\`\`\`java\nString example = "payment";\n\`\`\`\n\n![HSM architecture](https://example.com/hsm.png)`} required />
               ) : (
                 <div className="admin-content-preview">
                   {form.content.trim() ? <MarkdownContent content={form.content} /> : <span className="admin-preview-empty">Start writing to see the article preview.</span>}
@@ -207,6 +201,7 @@ function AdminBlogPage() {
         </section>
       </main>
     </div>
+  </>
   );
 }
 

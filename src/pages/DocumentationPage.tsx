@@ -1,3 +1,4 @@
+import SEO from "../components/SEO";
 import { Link, useNavigate } from "react-router-dom";
 
 function DocumentationPage() {
@@ -5,6 +6,12 @@ function DocumentationPage() {
   const navigate = useNavigate();
 
   return (
+      <>
+      <SEO
+        title={'ISO 20022 Developer Documentation | FintechSchema'}
+        description={'Learn how to validate, generate and work with ISO 20022 messages using FintechSchema developer tools.'}
+        path={'/documentation'}
+      />
 
     <div className="app">
 
@@ -600,6 +607,8 @@ function DocumentationPage() {
       </main>
 
     </div>
+
+  </>
 
   );
 

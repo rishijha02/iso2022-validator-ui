@@ -3935,3 +3935,83 @@
     white-space: nowrap;
   }
 }
+
+/* =========================================
+   JSON FORMATTER / VALIDATOR
+   Scoped additions for JsonFormatterPage.tsx.
+========================================= */
+
+.json-tool-textarea {
+  min-height: 240px;
+}
+
+.tool-validate-button {
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+  color: #166534;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tool-validate-button:hover {
+  background: #dcfce7;
+}
+
+.json-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: -6px 0 24px;
+  padding: 12px 14px;
+  border: 1px solid #dbe3ec;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.json-status > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.json-status-idle > span {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.json-status-valid {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.json-status-valid > span {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+.json-status-invalid {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.json-status-invalid > span {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.json-output-label {
+  margin-top: 2px;
+}

@@ -108,7 +108,7 @@ function DeveloperToolsPage() {
                     {/* XML JSON */}
 
                     <Link
-                        to="/xml-to-json"
+                        to="/developer-tools/xml-to-json"
                         className="tool-card"
                     >
 
@@ -134,6 +134,30 @@ function DeveloperToolsPage() {
 
                             Open Tool →
 
+                        </span>
+
+                    </Link>
+
+                    <Link
+                        to="/developer-tools/json-formatter"
+                        className="tool-card"
+                    >
+
+                        <div className="tool-icon">
+                            {"{ }"}
+                        </div>
+
+                        <h2>
+                            JSON Formatter / Validator
+                        </h2>
+
+                        <p>
+                            Beautify, minify, validate, and copy JSON
+                            payloads for APIs and payment integrations.
+                        </p>
+
+                        <span className="tool-link">
+                            Open Tool →
                         </span>
 
                     </Link>

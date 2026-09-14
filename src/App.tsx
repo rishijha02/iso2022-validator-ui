@@ -17,6 +17,7 @@ import BlogPage from "./pages/BlogPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AdminBlogPage from "./pages/AdminBlogPage";
+import JsonFormatterPage from "./pages/JsonFormatterPage";
 
 import "./App.css";
 
@@ -59,7 +60,7 @@ function App() {
         />
 
       <Route
-        path="/xml-to-json"
+        path="/developer-tools/xml-to-json"
         element={<XmlToJsonPage />}
     />
 
@@ -95,6 +96,11 @@ function App() {
     <Route
     path="/message-generator"
      element={<MessageGeneratorPage />}
+    />
+
+    <Route
+      path="/developer-tools/json-formatter"
+      element={<JsonFormatterPage />}
     />
 
       </Routes>

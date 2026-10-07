@@ -82,7 +82,7 @@ function HomePage() {
         <Link to="/" className="home-brand">
           <span className="home-brand-icon">ISO</span>
           <span>
-            <strong>ISO 20022 Validator</strong>
+            <strong>FintechSchema</strong>
             <small>Fintech Developer Platform</small>
           </span>
         </Link>
@@ -108,12 +108,12 @@ function HomePage() {
           <div className="home-hero-content">
             <span className="home-eyebrow">FINTECH DEVELOPER PLATFORM</span>
             <h1>
-              Build. Validate. <span>Understand.</span>
+              Build. Validate. <span>Simulate.</span>
             </h1>
             <p>
-              Practical tools for ISO 20022, payments and financial messaging.
-              Validate XML, generate messages, inspect identifiers and learn how
-              modern payment systems work.
+              Explore financial messaging, payment systems, 
+              Open Banking and fintech engineering through 
+              practical tools and interactive labs
             </p>
 
             <div className="home-hero-actions">
@@ -123,12 +123,61 @@ function HomePage() {
               <Link to="/developer-tools" className="home-secondary-button">
                 Explore Developer Tools
               </Link>
+              <Link to="/open-banking-lab" className="home-secondary-button">
+                Open Banking Lab →
+              </Link>
             </div>
 
             <div className="home-trust-row">
               <span>✓ ISO 20022 validation</span>
               <span>✓ Payment developer tools</span>
               <span>✓ Fintech engineering insights</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="home-open-banking-section">
+          <div className="home-open-banking-content">
+            <div className="home-open-banking-copy">
+              <span className="home-section-eyebrow">NEW · OPEN BANKING LAB</span>
+              <h2>See what happens behind an Open Banking API call.</h2>
+              <p>
+                Explore an interactive Account Information (AIS) journey — from customer consent
+                to authorization code, access token and account data. Inspect the request and
+                response at every step.
+              </p>
+              <div className="home-open-banking-actions">
+                <Link to="/open-banking-lab" className="home-primary-button">
+                  Try Open Banking Lab →
+                </Link>
+                <span>Phase 1 · Simulated bank environment</span>
+              </div>
+            </div>
+
+            <div className="home-open-banking-flow" aria-label="Open Banking flow preview">
+              <div className="home-flow-node">
+                <span>01</span>
+                <strong>Create consent</strong>
+                <small>TPP → Bank</small>
+              </div>
+              <div className="home-flow-line" />
+              <div className="home-flow-node active">
+                <span>02</span>
+                <strong>User approval</strong>
+                <small>Customer → Bank</small>
+              </div>
+              <div className="home-flow-line" />
+              <div className="home-flow-node">
+                <span>03</span>
+                <strong>Access token</strong>
+                <small>Auth → API</small>
+              </div>
+              <div className="home-flow-line" />
+              <div className="home-flow-node">
+                <span>04</span>
+                <strong>Account data</strong>
+                <small>GET /accounts</small>
+              </div>
             </div>
           </div>
         </section>
@@ -217,9 +266,14 @@ function HomePage() {
               <span className="home-section-eyebrow">DEVELOPER TOOLBOX</span>
               <h2>Everything you need around the message.</h2>
             </div>
-            <Link to="/developer-tools" className="home-view-all">
-              View all tools →
-            </Link>
+            <div className="home-tools-heading-actions">
+              <Link to="/open-banking-lab" className="home-open-banking-link">
+                Open Banking Lab →
+              </Link>
+              <Link to="/developer-tools" className="home-view-all">
+                View all tools →
+              </Link>
+            </div>
           </div>
 
           <div className="home-tools-grid">
@@ -238,8 +292,13 @@ function HomePage() {
               <strong>Identifier Validator</strong>
               <span>Check IBAN, BIC and other payment identifiers.</span>
             </Link>
-            <Link to="/xml-to-json" className="home-tool-card">
-              <span className="home-tool-number">04</span>
+            <Link to="/open-banking-lab" className="home-tool-card home-tool-card-featured">
+              <span className="home-tool-number">04 · NEW</span>
+              <strong>Open Banking Lab</strong>
+              <span>Simulate consent, authorization and account information flows.</span>
+            </Link>
+            <Link to="/developer-tools/xml-to-json" className="home-tool-card">
+              <span className="home-tool-number">05</span>
               <strong>XML → JSON</strong>
               <span>Convert structured financial messages for development.</span>
             </Link>

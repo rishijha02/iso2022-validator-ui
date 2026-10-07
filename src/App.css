@@ -4015,3 +4015,262 @@
 .json-output-label {
   margin-top: 2px;
 }
+
+/* =========================================================
+   Open Banking Lab - matches the existing FintechSchema theme
+   ========================================================= */
+.home-open-banking-section {
+  width: min(1160px, 90%);
+  margin: 0 auto;
+  padding: 10px 0 70px;
+}
+
+.home-open-banking-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, .95fr);
+  gap: 45px;
+  align-items: center;
+  padding: 42px;
+  border: 1px solid #c7d2fe;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eef2ff 0%, #ffffff 62%);
+  box-shadow: 0 15px 45px rgba(79,70,229,.08);
+  overflow: hidden;
+  position: relative;
+}
+
+.home-open-banking-content::after {
+  content: "";
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  right: -120px;
+  top: -120px;
+  border-radius: 50%;
+  background: #c7d2fe;
+  opacity: .25;
+  filter: blur(5px);
+}
+
+.home-open-banking-copy { position: relative; z-index: 1; }
+.home-open-banking-copy h2 {
+  margin: 8px 0 12px;
+  font-size: clamp(28px, 3.5vw, 42px);
+  line-height: 1.12;
+  letter-spacing: -.035em;
+}
+.home-open-banking-copy p {
+  max-width: 650px;
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.75;
+}
+.home-open-banking-actions {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.home-open-banking-actions span { color: #94a3b8; font-size: 11px; }
+
+.home-open-banking-flow {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+.home-flow-node {
+  min-width: 0;
+  min-height: 112px;
+  padding: 18px;
+  border: 1px solid #dbe3ef;
+  border-radius: 12px;
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 8px 24px rgba(15,23,42,.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.home-flow-node.active { border-color: #818cf8; box-shadow: 0 8px 28px rgba(79,70,229,.12); }
+.home-flow-node span { display: block; margin-bottom: 12px; color: #818cf8; font-family: monospace; font-size: 11px; font-weight: 700; }
+.home-flow-node strong { display: block; margin-bottom: 5px; font-size: 14px; line-height: 1.3; white-space: normal; overflow-wrap: anywhere; }
+.home-flow-node small { color: #94a3b8; font-size: 10px; }
+.home-flow-line { display: none; }
+
+.home-tools-heading-actions { display: flex; align-items: center; gap: 20px; }
+.home-open-banking-link { color: #6366f1; text-decoration: none; font-size: 13px; font-weight: 700; }
+.home-tool-card-featured { border-color: #c7d2fe; background: linear-gradient(180deg, #f8faff, #fff); }
+.home-tool-card-featured .home-tool-number { color: #6366f1; }
+
+/* Open Banking flow selector and PIS */
+.obl-flow-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.obl-flow-option {
+  min-width: 0;
+  padding: 17px 18px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  color: #0f172a;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+.obl-flow-option:hover { transform: translateY(-1px); box-shadow: 0 7px 20px rgba(15,23,42,.05); }
+.obl-flow-option.is-selected { border-color: #818cf8; background: #f8faff; box-shadow: 0 7px 22px rgba(79,70,229,.08); }
+.obl-flow-option-tag { color: #6366f1; font-family: monospace; font-size: 10px; font-weight: 800; letter-spacing: .1em; }
+.obl-flow-option strong { font-size: 14px; }
+.obl-flow-option small { color: #94a3b8; font-size: 11px; }
+.obl-payment-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+  margin: 28px 0 22px;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  background: #f8fafc;
+}
+.obl-form-field { display: flex; flex-direction: column; gap: 6px; }
+.obl-form-field label { color: #475569; font-size: 11px; font-weight: 700; }
+.obl-form-field input, .obl-form-field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 11px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  font: inherit;
+  font-size: 12px;
+  outline: none;
+}
+.obl-form-field input:focus, .obl-form-field select:focus { border-color: #818cf8; box-shadow: 0 0 0 3px rgba(99,102,241,.08); }
+.obl-payment-review {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 22px 0;
+  padding: 17px;
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  background: #f8faff;
+}
+.obl-payment-review span { color: #6366f1; font-size: 9px; font-weight: 800; letter-spacing: .1em; }
+.obl-payment-review strong { margin: 4px 0; font-size: 26px; letter-spacing: -.03em; }
+.obl-payment-review small { color: #64748b; font-size: 11px; }
+
+.obl-page { min-height: 100vh; background: #f8fafc; color: #0f172a; }
+.obl-container { width: min(1160px, 90%); margin: 0 auto; padding: 55px 0 80px; }
+.obl-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; margin-bottom: 30px; }
+.obl-heading h1 { max-width: 760px; margin: 8px 0 12px; font-size: clamp(32px, 5vw, 52px); line-height: 1.08; letter-spacing: -.04em; }
+.obl-heading p { max-width: 760px; margin: 0; color: #64748b; font-size: 15px; line-height: 1.7; }
+.obl-phase-badge, .obl-status, .obl-http-status { flex-shrink: 0; padding: 7px 10px; border-radius: 999px; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.obl-phase-badge { color: #4f46e5; background: #eef2ff; border: 1px solid #c7d2fe; }
+.obl-start-card, .obl-stepper-card, .obl-flow-card, .obl-inspector, .obl-event-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 8px 25px rgba(15,23,42,.035); }
+.obl-start-card { padding: 28px; }
+.obl-start-copy { display: flex; gap: 17px; align-items: flex-start; }
+.obl-icon { width: 46px; height: 46px; display: grid; place-items: center; flex-shrink: 0; border-radius: 11px; background: #eef2ff; color: #4f46e5; font-size: 24px; font-weight: 800; }
+.obl-kicker { display: inline-block; color: #6366f1; font-size: 10px; font-weight: 800; letter-spacing: .13em; }
+.obl-start-card h2, .obl-stepper-card h2, .obl-flow-card h2, .obl-inspector h2, .obl-event-card h2 { margin: 6px 0 6px; font-size: 20px; letter-spacing: -.015em; }
+.obl-start-copy p { max-width: 760px; margin: 0; color: #64748b; font-size: 13px; line-height: 1.65; }
+.obl-permissions { margin: 28px 0 22px; padding: 18px; border: 1px solid #e2e8f0; border-radius: 11px; background: #f8fafc; }
+.obl-permissions-heading { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 12px; }
+.obl-permissions-heading strong { font-size: 13px; }
+.obl-permissions-heading span { color: #94a3b8; font-size: 11px; }
+.obl-permission { display: flex; gap: 12px; align-items: center; padding: 12px 4px; border-top: 1px solid #e2e8f0; cursor: pointer; }
+.obl-permission input { width: 16px; height: 16px; accent-color: #4f46e5; }
+.obl-permission span { display: flex; flex-direction: column; gap: 3px; }
+.obl-permission strong { font-size: 13px; }
+.obl-permission small { color: #64748b; font-size: 11px; }
+.obl-start-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+.obl-start-footer > span { color: #94a3b8; font-size: 11px; }
+.obl-primary-button, .obl-secondary-button, .obl-reset-button { border-radius: 8px; padding: 10px 15px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+.obl-primary-button { border: 0; background: #4f46e5; color: white; box-shadow: 0 8px 20px rgba(79,70,229,.18); }
+.obl-secondary-button, .obl-reset-button { border: 1px solid #cbd5e1; background: white; color: #334155; }
+.obl-primary-button:hover, .obl-secondary-button:hover, .obl-reset-button:hover { transform: translateY(-1px); }
+
+.obl-stepper-card { padding: 24px; margin-bottom: 18px; }
+.obl-stepper-header, .obl-card-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.obl-stepper-header { margin-bottom: 20px; }
+.obl-stepper { display: grid; grid-template-columns: repeat(5, 1fr); gap: 9px; }
+.obl-step { min-width: 0; text-align: left; padding: 13px; border: 1px solid #e2e8f0; border-radius: 10px; background: white; cursor: pointer; }
+.obl-step.is-active { border-color: #818cf8; background: #f8faff; box-shadow: 0 5px 18px rgba(79,70,229,.08); }
+.obl-step.is-complete { border-color: #bbf7d0; background: #f0fdf4; }
+.obl-step-number { display: block; margin-bottom: 9px; color: #94a3b8; font-family: monospace; font-size: 10px; font-weight: 700; }
+.obl-step.is-active .obl-step-number { color: #4f46e5; }
+.obl-step.is-complete .obl-step-number { color: #16a34a; }
+.obl-step-copy { display: flex; flex-direction: column; gap: 3px; }
+.obl-step-copy strong { font-size: 11px; }
+.obl-step-copy small { color: #94a3b8; font-size: 9px; line-height: 1.3; }
+
+.obl-workspace { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(360px, .9fr); gap: 18px; }
+.obl-flow-card, .obl-inspector { min-height: 500px; overflow: hidden; }
+.obl-card-header { padding: 20px 22px; border-bottom: 1px solid #e2e8f0; }
+.obl-status { color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; }
+.obl-http-status { color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; }
+.obl-bank-screen { padding: 28px; }
+.obl-bank-topline { display: flex; align-items: center; gap: 10px; color: #334155; font-size: 12px; font-weight: 700; }
+.obl-bank-mark { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 8px; background: #0f172a; color: white; font-size: 10px; font-weight: 800; }
+.obl-bank-content { max-width: 530px; margin: 45px auto 25px; padding: 28px; border: 1px solid #e2e8f0; border-radius: 13px; box-shadow: 0 15px 35px rgba(15,23,42,.06); }
+.obl-bank-content h3, .obl-state-panel h3 { margin: 8px 0 10px; font-size: 24px; letter-spacing: -.025em; }
+.obl-bank-content p, .obl-state-panel p { margin: 0; color: #64748b; font-size: 13px; line-height: 1.7; }
+.obl-consent-list { display: grid; gap: 8px; margin: 22px 0; padding: 15px; border-radius: 9px; background: #f8fafc; color: #334155; font-size: 12px; }
+.obl-bank-actions { display: flex; justify-content: flex-end; gap: 9px; }
+.obl-state-panel { min-height: 410px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 35px; }
+.obl-state-icon { width: 56px; height: 56px; display: grid; place-items: center; margin-bottom: 20px; border-radius: 50%; background: #eef2ff; color: #4f46e5; font-size: 24px; font-weight: 800; }
+.obl-state-panel p { max-width: 470px; margin-bottom: 25px; }
+.obl-account-preview { width: min(330px, 100%); margin: 0 auto 25px; padding: 18px; text-align: left; border: 1px solid #c7d2fe; border-radius: 11px; background: #f8faff; }
+.obl-account-preview span, .obl-account-preview small { display: block; color: #64748b; font-size: 10px; }
+.obl-account-preview strong { display: block; margin: 8px 0 4px; color: #0f172a; font-size: 26px; letter-spacing: -.03em; }
+.obl-inspector { background: #0f172a; color: #e2e8f0; }
+.obl-inspector .obl-card-header { border-color: #1e293b; }
+.obl-inspector .obl-card-header h2 { color: #f8fafc; }
+.obl-code-block { margin: 17px; overflow: hidden; border: 1px solid #243244; border-radius: 9px; background: #111c2d; }
+.obl-code-title { padding: 9px 11px; border-bottom: 1px solid #243244; color: #94a3b8; font-family: monospace; font-size: 9px; font-weight: 700; letter-spacing: .1em; }
+.obl-code-block pre { margin: 0; padding: 13px; overflow: auto; color: #cbd5e1; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+.obl-event-card { margin-top: 18px; }
+.obl-event-card > .obl-card-header > span:last-child { color: #94a3b8; font-size: 11px; }
+.obl-events { padding: 8px 22px 18px; }
+.obl-event { display: flex; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid #f1f5f9; }
+.obl-event:last-child { border-bottom: 0; }
+.obl-event-dot { width: 24px; height: 24px; display: grid; place-items: center; flex-shrink: 0; border-radius: 50%; background: #f0fdf4; color: #16a34a; font-size: 11px; font-weight: 800; }
+.obl-event div { display: flex; flex-direction: column; gap: 3px; }
+.obl-event strong { font-size: 12px; }
+.obl-event small { color: #94a3b8; font-size: 10px; }
+
+@media (max-width: 900px) {
+  .home-open-banking-content { grid-template-columns: 1fr; }
+  .obl-flow-selector { grid-template-columns: 1fr; }
+  .obl-heading { align-items: flex-start; flex-direction: column; }
+  .obl-stepper { grid-template-columns: 1fr 1fr; }
+  .obl-workspace { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .home-open-banking-section { padding-bottom: 50px; }
+  .home-open-banking-content { padding: 25px; }
+  .home-open-banking-flow { grid-template-columns: 1fr; }
+  .home-tools-heading-actions { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .obl-container { padding-top: 35px; }
+  .obl-start-card { padding: 20px; }
+  .obl-payment-form { grid-template-columns: 1fr; }
+  .obl-permissions-heading { flex-direction: column; gap: 5px; }
+  .obl-start-footer { align-items: flex-start; flex-direction: column; }
+  .obl-stepper { grid-template-columns: 1fr; }
+  .obl-bank-content { margin-top: 28px; padding: 20px; }
+  .obl-bank-actions { flex-direction: column-reverse; }
+  .obl-bank-actions button { width: 100%; }
+  .obl-card-header { align-items: flex-start; }
+}

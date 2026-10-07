@@ -18,6 +18,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AdminBlogPage from "./pages/AdminBlogPage";
 import JsonFormatterPage from "./pages/JsonFormatterPage";
+import OpenBankingLabPage from "./pages/OpenBankingLabPage";
 
 import "./App.css";
 
@@ -57,6 +58,10 @@ function App() {
         <Route
           path="/supported-messages"
           element={<SupportedMessagesPage />}
+        />
+        <Route
+          path="/open-banking-lab"
+          element={<OpenBankingLabPage />}
         />
 
       <Route

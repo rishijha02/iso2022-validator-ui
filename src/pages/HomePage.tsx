@@ -126,6 +126,9 @@ function HomePage() {
               <Link to="/open-banking-lab" className="home-secondary-button">
                 Open Banking Lab →
               </Link>
+              <Link to="/payment-lab" className="home-secondary-button">
+                Payments Lab →
+              </Link>
             </div>
 
             <div className="home-trust-row">

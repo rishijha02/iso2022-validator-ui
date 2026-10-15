@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { API_BASE_URL } from "../config/api";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 
@@ -8,9 +9,8 @@ type StepId = "consent" | "authorize" | "code" | "token" | "accounts" | "payment
 const aisSteps: { id: StepId; number: string; title: string; subtitle: string }[] = [
   { id: "consent", number: "01", title: "Create consent", subtitle: "TPP requests access" },
   { id: "authorize", number: "02", title: "User authorization", subtitle: "Customer approves access" },
-  { id: "code", number: "03", title: "Authorization code", subtitle: "Bank returns a code" },
-  { id: "token", number: "04", title: "Access token", subtitle: "Token exchange" },
-  { id: "accounts", number: "05", title: "Account data", subtitle: "AIS data returned" },
+  { id: "token", number: "03", title: "Access token", subtitle: "Issue a demo token" },
+  { id: "accounts", number: "04", title: "Account data", subtitle: "AIS data returned" },
 ];
 
 const pisSteps: { id: StepId; number: string; title: string; subtitle: string }[] = [
@@ -49,9 +49,30 @@ function OpenBankingLabPage() {
     reference: "INV-2026-001",
   });
   const [simulationStarted, setSimulationStarted] = useState(false);
+  const [consentId, setConsentId] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+  const [apiRequest, setApiRequest] = useState("");
+  const [apiResponse, setApiResponse] = useState("");
+  const [httpStatus, setHttpStatus] = useState<number | null>(null);
+  const [apiError, setApiError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [aisAccounts, setAisAccounts] = useState<unknown>(null);
 
   const steps = flowType === "ais" ? aisSteps : pisSteps;
   const currentStep = steps[activeStep];
+
+  const selectedPermissions = () => [
+    permissions.accounts && "ACCOUNTS",
+    permissions.balances && "BALANCES",
+    permissions.transactions && "TRANSACTIONS",
+  ].filter(Boolean) as string[];
+
+  const aisRequestBody = (approved = false) => ({
+    ibannum: "DEMO-IBAN-001",
+    durationindays: 90,
+    approved,
+    permission: selectedPermissions().map((permissionValue) => ({ permissionValue })),
+  });
 
   const requestPayload = useMemo(() => {
     if (flowType === "pis") {
@@ -80,8 +101,8 @@ function OpenBankingLabPage() {
     }
     if (currentStep.id === "authorize") return JSON.stringify({ consentId: "CONSENT-2026-001", action: "AUTHORIZE", customer: "demo-user" }, null, 2);
     if (currentStep.id === "code") return "POST /oauth/authorize\n\nresponse_type=code\nclient_id=fintechschema-demo";
-    if (currentStep.id === "token") return "POST /oauth/token\n\ngrant_type=authorization_code\ncode=AUTH-CODE-789";
-    return "GET /accounts\n\nAuthorization: Bearer demo-access-token";
+    if (currentStep.id === "token") return `POST /api/open-banking/ais/token?consentId=${consentId || "<consentId>"}\n\n${JSON.stringify(aisRequestBody(true), null, 2)}`;
+    return `GET /api/open-banking/ais/accounts?consentId=${consentId || "<consentId>"}`;
   }, [currentStep.id, permissions, flowType, payment]);
 
   const responsePayload = useMemo(() => {
@@ -99,22 +120,107 @@ function OpenBankingLabPage() {
     return JSON.stringify(accountData, null, 2);
   }, [currentStep.id, flowType, payment]);
 
+  const displayedRequest = apiRequest || requestPayload;
+  const displayedResponse = apiResponse || responsePayload;
+
+  const callAisApi = async (method: string, path: string, body?: unknown, token?: string) => {
+    const url = `${API_BASE_URL}${path}`;
+    const headers: Record<string, string> = { Accept: "application/json" };
+    if (body !== undefined) headers["Content-Type"] = "application/json";
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const requestText = `${method} ${path}${token ? `\nAuthorization: Bearer ${token}` : ""}${body !== undefined ? `\n\n${JSON.stringify(body, null, 2)}` : ""}`;
+    setApiRequest(requestText);
+    setApiResponse("Waiting for backend response…");
+    setHttpStatus(null);
+    setApiError("");
+    setLoading(true);
+    let responseReceived = false;
+    try {
+      const response = await fetch(url, { method, headers, ...(body !== undefined ? { body: JSON.stringify(body) } : {}) });
+      responseReceived = true;
+      const text = await response.text();
+      let parsed: unknown = text;
+      try { parsed = text ? JSON.parse(text) : null; } catch { /* keep non-JSON response as text */ }
+      setHttpStatus(response.status);
+      setApiResponse(JSON.stringify(parsed, null, 2));
+      if (!response.ok) {
+        const message = typeof parsed === "object" && parsed !== null && "message" in parsed
+          ? String((parsed as { message: unknown }).message)
+          : `Request failed with HTTP ${response.status}`;
+        throw new Error(message);
+      }
+      return parsed as Record<string, unknown>;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unable to reach the Open Banking backend.";
+      setApiError(message);
+      if (!responseReceived) setApiResponse(JSON.stringify({ error: message }, null, 2));
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const togglePermission = (key: keyof typeof permissions) => {
     setPermissions((previous) => ({ ...previous, [key]: !previous[key] }));
   };
 
-  const startSimulation = () => {
+  const startSimulation = async () => {
     setSimulationStarted(true);
     setActiveStep(0);
+    setConsentId("");
+    setAccessToken("");
+    setAisAccounts(null);
+    if (flowType !== "ais") return;
+    try {
+      const result = await callAisApi("POST", "/api/open-banking/ais/consent", aisRequestBody());
+      const id = String(result.consentId ?? "");
+      if (!id) throw new Error("The backend response did not include consentId.");
+      setConsentId(id);
+    } catch { /* error is displayed in the API inspector */ }
   };
 
   const selectFlow = (flow: FlowType) => {
     setFlowType(flow);
     setSimulationStarted(false);
     setActiveStep(0);
+    setConsentId("");
+    setAccessToken("");
+    setApiRequest("");
+    setApiResponse("");
+    setHttpStatus(null);
+    setApiError("");
   };
 
-  const nextStep = () => {
+  const nextStep = async () => {
+    if (loading) return;
+    if (flowType === "ais") {
+      try {
+        if (currentStep.id === "consent") {
+          if (!consentId) throw new Error("Consent has not been created. Start the simulation again.");
+          await callAisApi("POST", `/api/open-banking/ais/${encodeURIComponent(consentId)}/authorize`, aisRequestBody(true));
+          setActiveStep(1);
+          return;
+        }
+        if (currentStep.id === "authorize") {
+          if (!consentId) throw new Error("Consent ID is missing.");
+          const result = await callAisApi("POST", `/api/open-banking/ais/token?consentId=${encodeURIComponent(consentId)}`, aisRequestBody(true));
+          const token = String(result.access_token ?? result.accessToken ?? "");
+          if (token) setAccessToken(token);
+          setActiveStep(2);
+          return;
+        }
+        if (currentStep.id === "token") {
+          const result = await callAisApi("GET", `/api/open-banking/ais/accounts?consentId=${encodeURIComponent(consentId)}`);
+          setAisAccounts(result);
+          setActiveStep(3);
+          return;
+        }
+      } catch { return; }
+    } else {
+      setApiRequest(requestPayload);
+      setApiResponse(responsePayload);
+      setHttpStatus(200);
+    }
     setSimulationStarted(true);
     setActiveStep((step) => Math.min(step + 1, steps.length - 1));
   };
@@ -122,6 +228,13 @@ function OpenBankingLabPage() {
   const resetSimulation = () => {
     setSimulationStarted(false);
     setActiveStep(0);
+    setConsentId("");
+    setAccessToken("");
+    setApiRequest("");
+    setApiResponse("");
+    setHttpStatus(null);
+    setApiError("");
+    setAisAccounts(null);
   };
 
   return (
@@ -218,7 +331,7 @@ function OpenBankingLabPage() {
                 </div>
               )}
 
-              <div className="obl-start-footer"><span>Demo only · No real banking credentials are used</span><button className="obl-primary-button" onClick={startSimulation}>Start simulation →</button></div>
+              <div className="obl-start-footer"><span>Demo only · No real banking credentials are used</span><button className="obl-primary-button" onClick={startSimulation} disabled={loading}>{loading ? "Connecting…" : "Start simulation →"}</button></div>
             </section>
           ) : (
             <>
@@ -311,7 +424,7 @@ function OpenBankingLabPage() {
                         </div>
                         <div className="obl-bank-actions">
                           <button className="obl-secondary-button" onClick={resetSimulation}>Cancel</button>
-                          <button className="obl-primary-button" onClick={nextStep}>Approve access</button>
+                          <button className="obl-primary-button" onClick={nextStep} disabled={loading}>{loading ? "Calling backend…" : "Approve access"}</button>
                         </div>
                       </div>
                     </div>
@@ -325,19 +438,21 @@ function OpenBankingLabPage() {
                       <p>
                         {currentStep.id === "authorize" && "The customer has authenticated and approved the requested access."}
                         {currentStep.id === "code" && "The bank returns a short-lived authorization code to the simulated TPP."}
-                        {currentStep.id === "token" && "The TPP exchanges the authorization code for a demo access token."}
+                        {currentStep.id === "token" && "The simulator requests a demo access token after consent authorization. This backend flow does not currently issue a separate authorization code."}
                         {currentStep.id === "accounts" && "The access token is used to retrieve the customer’s demo account information."}
                       </p>
+                      {currentStep.id === "authorize" && consentId && <div className="obl-account-preview"><span>CONSENT ID</span><strong>{consentId}</strong><small>Created by the backend</small></div>}
+                      {currentStep.id === "token" && accessToken && <div className="obl-account-preview"><span>ACCESS TOKEN</span><strong>{accessToken.slice(0, 18)}…</strong><small>Issued by the backend</small></div>}
                       {currentStep.id === "accounts" && (
                         <div className="obl-account-preview">
-                          <span>EUR · CURRENT ACCOUNT</span>
-                          <strong>€5,240.50</strong>
-                          <small>Available balance · €4,980.50</small>
+                          <span>BACKEND ACCOUNT RESPONSE</span>
+                          <strong>{Array.isArray(aisAccounts) ? `${aisAccounts.length} account(s) returned` : "Account data received"}</strong>
+                          <small>{accessToken ? "Demo access token issued" : "Token returned by backend"}</small>
                         </div>
                       )}
                       {activeStep < steps.length - 1 && (
-                        <button className="obl-primary-button" onClick={nextStep}>
-                          Continue →
+                        <button className="obl-primary-button" onClick={nextStep} disabled={loading}>
+                          {loading ? "Calling backend…" : "Continue →"}
                         </button>
                       )}
                     </div>
@@ -350,16 +465,17 @@ function OpenBankingLabPage() {
                       <span className="obl-kicker">DEVELOPER VIEW</span>
                       <h2>API inspector</h2>
                     </div>
-                    <span className="obl-http-status">200 OK</span>
+                    <span className="obl-http-status">{httpStatus ? `HTTP ${httpStatus}` : loading ? "CALLING API" : "NOT CALLED"}</span>
                   </div>
 
+                  {apiError && flowType === "ais" && <div role="alert" style={{ margin: "0 0 14px", padding: "12px 14px", borderRadius: 10, color: "#b91c1c", background: "#fef2f2", border: "1px solid #fecaca", fontSize: 13 }}><strong>Backend request failed</strong><div>{apiError}</div></div>}
                   <div className="obl-code-block">
                     <div className="obl-code-title">REQUEST</div>
-                    <pre>{requestPayload}</pre>
+                    <pre>{displayedRequest}</pre>
                   </div>
                   <div className="obl-code-block">
                     <div className="obl-code-title">RESPONSE</div>
-                    <pre>{responsePayload}</pre>
+                    <pre>{displayedResponse}</pre>
                   </div>
                 </aside>
               </section>

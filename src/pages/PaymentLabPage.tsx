@@ -61,7 +61,7 @@ function PaymentLabPage() {
     setPaymentId(id);
     const isRejected = scenario === "insufficient";
     const isTimeout = scenario === "timeout";
-    const items: PaymentStage[] = stageTemplates.map((stage, index) => ({ ...stage, status: "waiting" as StageStatus }));
+    const items: PaymentStage[] = stageTemplates.map((stage) => ({ ...stage, status: "waiting" as StageStatus }));
     setStages(items);
 
     for (let index = 0; index < items.length; index += 1) {

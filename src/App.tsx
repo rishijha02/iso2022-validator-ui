@@ -20,6 +20,7 @@ import AdminBlogPage from "./pages/AdminBlogPage";
 import JsonFormatterPage from "./pages/JsonFormatterPage";
 import OpenBankingLabPage from "./pages/OpenBankingLabPage";
 import PaymentLabPage from "./pages/PaymentLabPage";
+import PaymentRailExplorerPage from "./pages/PaymentRailExplorerPage";
 
 import "./App.css";
 
@@ -67,6 +68,10 @@ function App() {
         <Route
           path="/payment-lab"
           element={<PaymentLabPage />}
+        />
+        <Route
+          path="/payment-rail-explorer"
+          element={<PaymentRailExplorerPage />}
         />
 
       <Route

@@ -116,7 +116,7 @@ function PaymentLabPage() {
             <span><strong>FintechSchema</strong><small>Fintech Developer Platform</small></span>
           </Link>
           <nav className="home-nav">
-            <Link to="/">Home</Link><Link to="/validator">Validator</Link><Link to="/message-generator">Message Generator</Link><Link to="/open-banking-lab">Open Banking Lab</Link><Link to="/payment-lab">Payment Lab</Link><Link to="/developer-tools">Developer Tools</Link>
+            <Link to="/">Home</Link><Link to="/validator">Validator</Link><Link to="/message-generator">Message Generator</Link><Link to="/open-banking-lab">Open Banking Lab</Link><Link to="/payment-lab">Payment Simulator</Link><Link to="/payment-rail-explorer">Rail Explorer</Link><Link to="/developer-tools">Developer Tools</Link>
           </nav>
         </header>
 
@@ -134,6 +134,12 @@ function PaymentLabPage() {
               <div className="paymentlab-float paymentlab-float-top"><span>✓</span><div><b>Validated</b><small>Request accepted</small></div></div>
               <div className="paymentlab-float paymentlab-float-bottom"><span>⇄</span><div><b>SEPA SCT</b><small>Payment rail</small></div></div>
             </div>
+          </section>
+
+          <section className="paymentlab-module-next">
+            <div className="paymentlab-module-next-icon">⇄</div>
+            <div><span className="paymentlab-kicker">NEXT · MODULE 02</span><h2>Explore the payment rails behind the journey.</h2><p>Compare SEPA, SEPA Instant, SWIFT cross-border, UPI and Fedwire. Inspect each flow stage and learn how common failures should be handled.</p></div>
+            <Link to="/payment-rail-explorer" className="paymentlab-run-button">Open Rail Explorer <span>→</span></Link>
           </section>
 
           <section className="paymentlab-workspace">

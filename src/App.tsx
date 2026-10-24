@@ -21,6 +21,8 @@ import JsonFormatterPage from "./pages/JsonFormatterPage";
 import OpenBankingLabPage from "./pages/OpenBankingLabPage";
 import PaymentLabPage from "./pages/PaymentLabPage";
 import PaymentRailExplorerPage from "./pages/PaymentRailExplorerPage";
+import CardsLabPage from "./pages/CardsLabPage";
+
 
 import "./App.css";
 
@@ -73,6 +75,7 @@ function App() {
           path="/payment-rail-explorer"
           element={<PaymentRailExplorerPage />}
         />
+        <Route path="/cards-lab" element={<CardsLabPage />} />
 
       <Route
         path="/developer-tools/xml-to-json"

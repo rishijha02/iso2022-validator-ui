@@ -234,6 +234,12 @@ function HomePage() {
 
               </Link>
 
+              <Link to="/cards-lab" className="home-secondary-button">
+
+                Cards Lab →
+
+              </Link>
+
             </div>
 
             <div className="home-trust-row">
@@ -553,6 +559,9 @@ function HomePage() {
               <Link to="/payment-lab" className="home-open-banking-link">
                Payments Lab →
              </Link>
+              <Link to="/cards-lab" className="home-open-banking-link">
+               Cards Lab →
+             </Link>
              <Link to="/developer-tools" className="home-view-all">
 
                 View all tools →
@@ -615,8 +624,13 @@ function HomePage() {
              <strong>Payment Rail Explorer</strong>
              <span>Compare SEPA, SEPA Instant, SWIFT, UPI and Fedwire payment flows.</span>
            </Link>
+           <Link to="/cards-lab" className="home-tool-card home-tool-card-featured">
+             <span className="home-tool-number">07 · NEW</span>
+             <strong>Cards Lab</strong>
+             <span>Explore card authorization, ATM withdrawals, reversals and transaction processing with interactive simulations.</span>
+           </Link>
            <Link to="/developer-tools/xml-to-json" className="home-tool-card">
-             <span className="home-tool-number">07</span>
+             <span className="home-tool-number">08</span>
 
               <strong>XML → JSON</strong>
 

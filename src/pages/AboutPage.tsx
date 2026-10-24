@@ -8,8 +8,8 @@ function AboutPage() {
   return (
       <>
       <SEO
-        title={'About FintechSchema | ISO 20022 Developer Platform'}
-        description={'Learn about FintechSchema, a developer platform for ISO 20022 validation, message generation and fintech engineering tools.'}
+        title={'About FintechSchema | Financial Messaging & Payment Developer Tools'}
+        description={'Learn about FintechSchema and the people building tools for ISO 20022 messaging, payment flows, open banking concepts and fintech developers.'}
         path={'/about'}
       />
 
@@ -30,11 +30,11 @@ function AboutPage() {
           <div>
 
             <div className="logo-title">
-              ISO 20022 Validator
+              FintechSchema
             </div>
 
             <div className="logo-subtitle">
-              XML Schema Validation
+              Fintech Developer Tools
             </div>
 
           </div>
@@ -49,13 +49,11 @@ function AboutPage() {
         <section className="about-hero">
 
           <h1>
-            About ISO 20022 Validator
+            About FintechSchema
           </h1>
 
           <p>
-            A simple tool designed to help developers,
-            fintech teams, and banking professionals validate
-            and understand ISO 20022 messages.
+            A developer-focused platform that brings financial messaging tools, payment-flow learning experiences and practical fintech utilities together in one place.
           </p>
 
         </section>
@@ -68,8 +66,7 @@ function AboutPage() {
           <h2>Our Team</h2>
 
           <p>
-            The people building tools to make ISO 20022 messages
-            easier to validate, understand, and troubleshoot.
+            The people behind FintechSchema, working to make financial messaging and payment concepts easier to explore, understand and troubleshoot.
           </p>
 
 
@@ -178,20 +175,17 @@ function AboutPage() {
         <section className="about-card">
 
           <h2>
-            What is this project?
+            What is FintechSchema?
           </h2>
 
           <p>
-            ISO 20022 Validator allows users to paste an
-            ISO 20022 XML message and validate it against
-            the corresponding XML Schema Definition (XSD).
+            FintechSchema is a developer-focused platform for working with supported
+            ISO 20022 messages, exploring payment flows, and using practical utilities
+            for common fintech development tasks.
           </p>
 
           <p>
-            The application automatically detects the
-            ISO 20022 message type and version from the
-            XML namespace and uses the appropriate schema
-            for validation.
+            The platform includes message validation and generation, business-friendly message summaries, developer utilities, an Open Banking Lab, and a Payments Lab with a Payment Simulator and Payment Rail Explorer. Exact support depends on the tool and configured message profile.
           </p>
 
         </section>
@@ -286,7 +280,7 @@ function AboutPage() {
         <section className="about-card">
 
           <h2>
-            Why this project?
+            Why FintechSchema?
           </h2>
 
           <p>
@@ -296,11 +290,7 @@ function AboutPage() {
           </p>
 
           <p>
-            This project aims to provide developers and
-            banking professionals with a simple interface
-            to validate messages, identify errors, and
-            understand the business information contained
-            inside an ISO 20022 message.
+            FintechSchema aims to make complex financial messaging and payment workflows more approachable through practical tools and educational simulations. The labs are for learning and do not initiate real payments.
           </p>
 
         </section>

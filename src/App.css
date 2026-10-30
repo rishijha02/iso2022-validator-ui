@@ -5157,3 +5157,53 @@
 .cardslab-footer-note strong { color: #334155; font-size: 12px; }.cardslab-footer-note p { margin: 5px 0 0; color: #6b778c; font-size: 12px; line-height: 1.7; }
 @media (max-width: 760px) { .cardslab-grid { grid-template-columns: 1fr; } .cardslab-hero-card { margin: 20px auto 0; } .cardslab-channel-tabs button { flex-direction: column; gap: 5px; font-size: 12px; } .cardslab-panel { padding: 18px; } .cardslab-result-meta { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 430px) { .cardslab-channel-tabs { gap: 3px; padding: 4px; } .cardslab-channel-tabs button { padding: 11px 4px; } .cardslab-result-top { flex-direction: column; } .cardslab-demo-pill { margin-top: 8px; } }
+
+/* Shared navigation used across the public product pages. */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  min-height: 72px;
+  padding: 0 clamp(20px, 4vw, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba(255, 255, 255, .97);
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, .035);
+  backdrop-filter: blur(12px);
+}
+.site-brand { display: inline-flex; align-items: center; gap: 11px; flex: 0 0 auto; color: #0f172a; text-decoration: none; }
+.site-brand-mark { display: inline-flex; width: 39px; height: 34px; align-items: center; justify-content: center; border-radius: 8px; background: #0f172a; color: #fff; font-size: 11px; font-weight: 800; letter-spacing: .05em; }
+.site-brand-copy strong, .site-brand-copy small { display: block; }
+.site-brand-copy strong { font-size: 14px; }
+.site-brand-copy small { margin-top: 3px; color: #64748b; font-size: 10px; }
+.site-nav { display: flex; align-items: center; justify-content: flex-end; gap: clamp(10px, 1.35vw, 21px); }
+.site-nav > a, .site-auth-actions > a { color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; white-space: nowrap; transition: color .15s ease, background .15s ease; }
+.site-nav > a:hover, .site-nav > a.is-active, .site-auth-actions > a:first-child:hover { color: #4f46e5; }
+.site-nav > a.is-active { position: relative; }
+.site-nav > a.is-active::after { position: absolute; right: 0; bottom: -27px; left: 0; height: 2px; background: #4f46e5; content: ""; }
+.site-auth-actions { display: flex; align-items: center; gap: 12px; margin-left: 2px; }
+.site-signup { padding: 9px 13px; border-radius: 8px; background: #0f172a; color: #fff !important; }
+.site-signup:hover { background: #273449; }
+.site-menu-toggle { display: none; }
+
+/* Replace legacy public headers with the shared bar; Cards Lab retains its own header. */
+.home-header, .header { display: none !important; }
+.cards-lab-page > .home-header { display: flex !important; }
+
+@media (max-width: 1050px) {
+  .site-header { min-height: 66px; }
+  .site-menu-toggle { display: inline-flex; width: 42px; height: 40px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border: 1px solid #cbd5e1; border-radius: 9px; background: #fff; cursor: pointer; }
+  .site-menu-toggle span { display: block; width: 18px; height: 2px; border-radius: 2px; background: #0f172a; }
+  .site-nav { display: none; position: absolute; top: calc(100% + 1px); right: 0; left: 0; padding: 12px 5% 18px; align-items: stretch; flex-direction: column; gap: 0; background: #fff; border-bottom: 1px solid #e2e8f0; box-shadow: 0 14px 22px rgba(15, 23, 42, .08); }
+  .site-nav.is-open { display: flex; }
+  .site-nav > a { padding: 12px 4px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+  .site-nav > a.is-active::after { display: none; }
+  .site-auth-actions { padding-top: 14px; }
+}
+@media (max-width: 480px) {
+  .site-header { padding: 0 16px; }
+  .site-brand-copy small { font-size: 9px; }
+}

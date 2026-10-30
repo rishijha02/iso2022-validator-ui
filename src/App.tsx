@@ -21,14 +21,16 @@ import JsonFormatterPage from "./pages/JsonFormatterPage";
 import OpenBankingLabPage from "./pages/OpenBankingLabPage";
 import PaymentLabPage from "./pages/PaymentLabPage";
 import PaymentRailExplorerPage from "./pages/PaymentRailExplorerPage";
-import CardsLabPage from "./pages/CardsLabPage";
 
+import SiteNavigation from "./components/SiteNavigation";
 
 import "./App.css";
+import CardsLabPage from "./pages/CardsLabPage";
 
 function App() {
   return (
     <BrowserRouter>
+      <SiteNavigation />
       <Routes>
         <Route
         path="/about"
@@ -71,11 +73,15 @@ function App() {
           path="/payment-lab"
           element={<PaymentLabPage />}
         />
+
+        <Route
+          path="/cards-lab"
+          element={<CardsLabPage />}
+        />
         <Route
           path="/payment-rail-explorer"
           element={<PaymentRailExplorerPage />}
         />
-        <Route path="/cards-lab" element={<CardsLabPage />} />
 
       <Route
         path="/developer-tools/xml-to-json"

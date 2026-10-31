@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 
 type Channel = "ATM" | "POS" | "E-commerce";
@@ -37,10 +36,6 @@ export default function CardsLabPage() {
   return <>
     <SEO title="Cards Lab | FintechSchema" description="Explore simulated card authorization, ATM cash withdrawals, reversals and card transaction processing." path="/cards-lab" />
     <div className="obl-page payment-lab-page cards-lab-page">
-      <header className="home-header">
-        <Link to="/" className="home-brand"><span className="home-brand-icon">ISO</span><span><strong>FintechSchema</strong><small>Fintech Developer Platform</small></span></Link>
-        <nav className="home-nav"><Link to="/">Home</Link><Link to="/validator">Validator</Link><Link to="/message-generator">Message Generator</Link><Link to="/open-banking-lab">Open Banking Lab</Link><Link to="/payment-lab">Payment Simulator</Link><Link to="/payment-rail-explorer">Rail Explorer</Link><Link to="/cards-lab" aria-current="page">Cards Lab</Link><Link to="/developer-tools">Developer Tools</Link></nav>
-      </header>
       <main className="paymentlab-container cardslab-container">
         <section className="paymentlab-hero cardslab-hero">
           <div>

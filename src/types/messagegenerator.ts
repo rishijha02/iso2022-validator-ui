@@ -15,6 +15,17 @@ export interface MessageGenerationRequest {
 
   endToEndId?: string;
   version?: string;
+  fields?: Record<string, string>;
+}
+
+export interface GeneratorField {
+  key: string;
+  label: string;
+  section: string;
+  required: boolean;
+  inputType: "text" | "number" | "currency";
+  placeholder: string;
+  schemaPath: string;
 }
 
 

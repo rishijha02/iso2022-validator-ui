@@ -222,23 +222,11 @@ function HomePage() {
 
               </Link>
 
-              <Link to="/open-banking-lab" className="home-secondary-button">
+              <a href="#labs" className="home-secondary-button">
 
-                Open Banking Lab →
+                Explore the Labs ↓
 
-              </Link>
-
-              <Link to="/payment-lab" className="home-secondary-button">
-
-                Payments Lab →
-
-              </Link>
-
-              <Link to="/cards-lab" className="home-secondary-button">
-
-                Cards Lab →
-
-              </Link>
+              </a>
 
             </div>
 
@@ -256,147 +244,39 @@ function HomePage() {
 
         </section>
 
-        <section className="home-open-banking-section">
-
-          <div className="home-open-banking-content">
-
-            <div className="home-open-banking-copy">
-
-              <span className="home-section-eyebrow">NEW · OPEN BANKING LAB</span>
-
-              <h2>See what happens behind an Open Banking API call.</h2>
-
-              <p>
-
-                Explore an interactive Account Information (AIS) journey — from customer consent
-
-                to authorization code, access token and account data. Inspect the request and
-
-                response at every step.
-
-              </p>
-
-              <div className="home-open-banking-actions">
-
-                <Link to="/open-banking-lab" className="home-primary-button">
-
-                  Try Open Banking Lab →
-
-                </Link>
-
-                <span>Phase 1 · Simulated bank environment</span>
-
-              </div>
-
+        <section className="home-labs-section" id="labs">
+          <div className="home-section-heading">
+            <div>
+              <span className="home-section-eyebrow">INTERACTIVE FINTECH LABS</span>
+              <h2>Explore the systems behind every transaction.</h2>
+              <p>Learn by running realistic, safe simulations across banking APIs, payment rails and card processing.</p>
             </div>
-
-            <div className="home-open-banking-flow" aria-label="Open Banking flow preview">
-
-              <div className="home-flow-node">
-
-                <span>01</span>
-
-                <strong>Create consent</strong>
-
-                <small>TPP → Bank</small>
-
-              </div>
-
-              <div className="home-flow-line" />
-
-              <div className="home-flow-node active">
-
-                <span>02</span>
-
-                <strong>User approval</strong>
-
-                <small>Customer → Bank</small>
-
-              </div>
-
-              <div className="home-flow-line" />
-
-              <div className="home-flow-node">
-
-                <span>03</span>
-
-                <strong>Access token</strong>
-
-                <small>Auth → API</small>
-
-              </div>
-
-              <div className="home-flow-line" />
-
-              <div className="home-flow-node">
-
-                <span>04</span>
-
-                <strong>Account data</strong>
-
-                <small>GET /accounts</small>
-
-              </div>
-
-            </div>
-
+            <span className="home-labs-badge">LEARN BY DOING</span>
           </div>
-
+          <div className="home-labs-grid">
+            <article className="home-lab-card home-lab-open-banking">
+              <div className="home-lab-card-top"><span className="home-lab-icon">↗</span><span className="home-lab-tag">BANKING APIS</span></div>
+              <h3>Open Banking Lab</h3>
+              <p>Step through account information and payment initiation flows, from customer consent to API response.</p>
+              <div className="home-lab-steps"><span>Consent</span><i>→</i><span>Authorize</span><i>→</i><span>Access</span></div>
+              <Link to="/open-banking-lab">Explore Open Banking <span aria-hidden="true">→</span></Link>
+            </article>
+            <article className="home-lab-card home-lab-payments">
+              <div className="home-lab-card-top"><span className="home-lab-icon">⇄</span><span className="home-lab-tag">PAYMENT SYSTEMS</span></div>
+              <h3>Payments Lab</h3>
+              <p>Follow payment processing, settlement and rail choices. Explore what happens when a payment succeeds or fails.</p>
+              <div className="home-lab-steps"><span>Validate</span><i>→</i><span>Process</span><i>→</i><span>Settle</span></div>
+              <div className="home-lab-links"><Link to="/payment-lab">Payment Simulator <span aria-hidden="true">→</span></Link><Link to="/payment-rail-explorer">Payment Rail Explorer <span aria-hidden="true">→</span></Link></div>
+            </article>
+            <article className="home-lab-card home-lab-cards">
+              <div className="home-lab-card-top"><span className="home-lab-icon">▤</span><span className="home-lab-tag">CARD PAYMENTS</span></div>
+              <h3>Cards Lab</h3>
+              <p>Simulate ATM, point-of-sale and online card transactions, including declines, timeouts and reversals.</p>
+              <div className="home-lab-steps"><span>Authorize</span><i>→</i><span>Respond</span><i>→</i><span>Reconcile</span></div>
+              <Link to="/cards-lab">Explore Cards Lab <span aria-hidden="true">→</span></Link>
+            </article>
+          </div>
         </section>
-
-               <section className="home-open-banking-section">
-         <div className="home-open-banking-content">
-           <div className="home-open-banking-copy">
-             <span className="home-section-eyebrow">NEW · PAYMENTS LAB</span>
-             <h2>Follow a payment from initiation to settlement.</h2>
-             <p>
-               Explore how a payment moves through validation, risk checks, processing and
-               settlement. Run a simulated payment, inspect each lifecycle stage and see how
-               common failures such as insufficient funds or a rail timeout affect the outcome.
-             </p>
-             <div className="home-open-banking-actions payment-lab-module-actions">
-               <div className="payment-lab-module-link">
-                 <Link to="/payment-lab" className="home-primary-button">
-                   Open Module 1 →
-                 </Link>
-                 <span>Payment Simulator</span>
-               </div>
-               <div className="payment-lab-module-link">
-                 <Link to="/payment-rail-explorer" className="home-secondary-button">
-                   Open Module 2 →
-                 </Link>
-                 <span>Payment Rail Explorer</span>
-               </div>
-             </div>
-           </div>
-
-           <div className="home-open-banking-flow" aria-label="Payment lifecycle preview">
-             <div className="home-flow-node">
-               <span>01</span>
-               <strong>Initiate</strong>
-               <small>Payment request</small>
-             </div>
-             <div className="home-flow-line" />
-             <div className="home-flow-node active">
-               <span>02</span>
-               <strong>Validate</strong>
-               <small>Rules &amp; risk checks</small>
-             </div>
-             <div className="home-flow-line" />
-             <div className="home-flow-node">
-               <span>03</span>
-               <strong>Process</strong>
-               <small>Payment rail</small>
-             </div>
-             <div className="home-flow-line" />
-             <div className="home-flow-node">
-               <span>04</span>
-               <strong>Settle</strong>
-               <small>Final outcome</small>
-             </div>
-           </div>
-         </div>
-       </section>
 
        <section className="home-blog-section">
 
@@ -550,18 +430,6 @@ function HomePage() {
 
             <div className="home-tools-heading-actions">
 
-              <Link to="/open-banking-lab" className="home-open-banking-link">
-
-                Open Banking Lab →
-
-              </Link>
-
-              <Link to="/payment-lab" className="home-open-banking-link">
-               Payments Lab →
-             </Link>
-              <Link to="/cards-lab" className="home-open-banking-link">
-               Cards Lab →
-             </Link>
              <Link to="/developer-tools" className="home-view-all">
 
                 View all tools →
@@ -604,33 +472,8 @@ function HomePage() {
 
             </Link>
 
-            <Link to="/open-banking-lab" className="home-tool-card home-tool-card-featured">
-
-              <span className="home-tool-number">04 · NEW</span>
-
-              <strong>Open Banking Lab</strong>
-
-              <span>Simulate consent, authorization and account information flows.</span>
-
-            </Link>
-
-            <Link to="/payment-lab" className="home-tool-card home-tool-card-featured">
-             <span className="home-tool-number">05 · NEW</span>
-             <strong>Payments Lab</strong>
-             <span>Simulate a payment lifecycle, inspect processing stages and explore failure scenarios.</span>
-           </Link>
-           <Link to="/payment-rail-explorer" className="home-tool-card home-tool-card-featured">
-             <span className="home-tool-number">06 · NEW</span>
-             <strong>Payment Rail Explorer</strong>
-             <span>Compare SEPA, SEPA Instant, SWIFT, UPI and Fedwire payment flows.</span>
-           </Link>
-           <Link to="/cards-lab" className="home-tool-card home-tool-card-featured">
-             <span className="home-tool-number">07 · NEW</span>
-             <strong>Cards Lab</strong>
-             <span>Explore card authorization, ATM withdrawals, reversals and transaction processing with interactive simulations.</span>
-           </Link>
            <Link to="/developer-tools/xml-to-json" className="home-tool-card">
-             <span className="home-tool-number">08</span>
+             <span className="home-tool-number">04</span>
 
               <strong>XML → JSON</strong>
 

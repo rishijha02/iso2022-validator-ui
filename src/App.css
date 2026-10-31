@@ -2895,6 +2895,10 @@
     gap: 18px;
 }
 
+.generator-config-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 
 .form-group {
     display: flex;
@@ -4015,6 +4019,34 @@
 .json-output-label {
   margin-top: 2px;
 }
+
+/* Unified homepage showcase for all interactive labs. */
+.home-labs-section { width: min(1160px, 90%); margin: 0 auto; padding: 12px 0 76px; scroll-margin-top: 88px; }
+.home-labs-section > .home-section-heading { margin-bottom: 24px; }
+.home-labs-section > .home-section-heading h2 { max-width: 720px; }
+.home-labs-section > .home-section-heading p { max-width: 700px; }
+.home-labs-badge { flex: 0 0 auto; padding: 9px 12px; border: 1px solid #c7d2fe; border-radius: 999px; background: #eef2ff; color: #4f46e5; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+.home-labs-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.home-lab-card { position: relative; display: flex; min-height: 310px; flex-direction: column; padding: 23px; overflow: hidden; border: 1px solid #e2e8f0; border-radius: 16px; background: linear-gradient(150deg, #fff, #f8faff); box-shadow: 0 12px 32px rgba(15,23,42,.055); }
+.home-lab-card::before { position: absolute; top: 0; right: 0; left: 0; height: 3px; background: linear-gradient(90deg, #6366f1, #38bdf8); content: ""; }
+.home-lab-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.home-lab-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 12px; background: #eef2ff; color: #4f46e5; font-size: 21px; font-weight: 800; }
+.home-lab-tag { color: #64748b; font-size: 9px; font-weight: 800; letter-spacing: .11em; }
+.home-lab-card h3 { margin: 21px 0 8px; color: #172033; font-size: 20px; letter-spacing: -.02em; }
+.home-lab-card p { margin: 0; color: #64748b; font-size: 12px; line-height: 1.7; }
+.home-lab-steps { display: flex; align-items: center; justify-content: space-between; gap: 5px; margin: 18px 0; padding: 11px 10px; border: 1px solid #e8edf5; border-radius: 9px; background: rgba(255,255,255,.8); color: #475569; font-size: 9px; font-weight: 700; }
+.home-lab-steps i { color: #a5b4fc; font-style: normal; }
+.home-lab-card > a, .home-lab-links a { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #4f46e5; text-decoration: none; font-size: 11px; font-weight: 750; }
+.home-lab-card > a { margin-top: auto; padding-top: 8px; }
+.home-lab-card > a:hover, .home-lab-links a:hover { color: #312e81; }
+.home-lab-links { display: grid; gap: 10px; margin-top: auto; padding-top: 8px; }
+.home-lab-links a + a { padding-top: 9px; border-top: 1px solid #e8edf5; }
+.home-lab-payments::before { background: linear-gradient(90deg, #0ea5e9, #34d399); }
+.home-lab-cards::before { background: linear-gradient(90deg, #f59e0b, #f43f5e); }
+.home-lab-payments .home-lab-icon { background: #ecfeff; color: #0891b2; }
+.home-lab-cards .home-lab-icon { background: #fff7ed; color: #ea580c; }
+@media (max-width: 900px) { .home-labs-grid { grid-template-columns: 1fr 1fr; } .home-lab-card:last-child { grid-column: 1 / -1; } }
+@media (max-width: 600px) { .home-labs-section { padding-bottom: 52px; } .home-labs-grid { grid-template-columns: 1fr; } .home-lab-card:last-child { grid-column: auto; } .home-labs-section > .home-section-heading { align-items: flex-start; gap: 12px; } .home-labs-badge { margin-top: 4px; } }
 
 /* =========================================================
    Open Banking Lab - matches the existing FintechSchema theme
@@ -5182,6 +5214,16 @@
 .site-nav { display: flex; align-items: center; justify-content: flex-end; gap: clamp(10px, 1.35vw, 21px); }
 .site-nav > a, .site-auth-actions > a { color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; white-space: nowrap; transition: color .15s ease, background .15s ease; }
 .site-nav > a:hover, .site-nav > a.is-active, .site-auth-actions > a:first-child:hover { color: #4f46e5; }
+.site-nav-dropdown { position: relative; display: flex; align-items: center; }
+.site-nav-dropdown-trigger { display: inline-flex; align-items: center; gap: 5px; padding: 8px 0; border: 0; background: transparent; color: #475569; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.site-nav-dropdown-trigger:hover, .site-nav-dropdown.is-active .site-nav-dropdown-trigger { color: #4f46e5; }
+.site-nav-dropdown-trigger span { font-size: 14px; }
+.site-nav-dropdown-menu { position: absolute; top: calc(100% + 10px); left: -14px; z-index: 110; display: flex; min-width: 205px; flex-direction: column; padding: 7px; border: 1px solid #e2e8f0; border-radius: 11px; background: #fff; box-shadow: 0 14px 30px rgba(15,23,42,.13); }
+.site-nav-dropdown-menu::before { position: absolute; top: -11px; right: 0; left: 0; height: 11px; content: ""; }
+.site-nav-dropdown:not(.is-open) .site-nav-dropdown-menu { display: none; }
+.site-nav-dropdown:hover .site-nav-dropdown-menu, .site-nav-dropdown:focus-within .site-nav-dropdown-menu, .site-nav-dropdown.is-open .site-nav-dropdown-menu { display: flex; }
+.site-nav-dropdown-menu a { padding: 10px 11px; border-radius: 7px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.site-nav-dropdown-menu a:hover, .site-nav-dropdown-menu a.is-active { color: #4338ca; background: #eef2ff; }
 .site-nav > a.is-active { position: relative; }
 .site-nav > a.is-active::after { position: absolute; right: 0; bottom: -27px; left: 0; height: 2px; background: #4f46e5; content: ""; }
 .site-auth-actions { display: flex; align-items: center; gap: 12px; margin-left: 2px; }
@@ -5189,9 +5231,8 @@
 .site-signup:hover { background: #273449; }
 .site-menu-toggle { display: none; }
 
-/* Replace legacy public headers with the shared bar; Cards Lab retains its own header. */
+/* Public pages use the same shared navigation bar. */
 .home-header, .header { display: none !important; }
-.cards-lab-page > .home-header { display: flex !important; }
 
 @media (max-width: 1050px) {
   .site-header { min-height: 66px; }
@@ -5201,6 +5242,13 @@
   .site-nav.is-open { display: flex; }
   .site-nav > a { padding: 12px 4px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
   .site-nav > a.is-active::after { display: none; }
+  .site-nav-dropdown { display: block; border-bottom: 1px solid #f1f5f9; }
+  .site-nav-dropdown-trigger { width: 100%; justify-content: space-between; padding: 12px 4px; font-size: 14px; text-align: left; }
+  .site-nav-dropdown-menu { position: static; min-width: 0; padding: 0 0 7px 10px; border: 0; border-radius: 0; box-shadow: none; }
+  .site-nav-dropdown-menu::before { display: none; }
+  .site-nav-dropdown:not(.is-open) .site-nav-dropdown-menu { display: none; }
+  .site-nav-dropdown:focus-within .site-nav-dropdown-menu, .site-nav-dropdown.is-open .site-nav-dropdown-menu { display: flex; }
+  .site-nav-dropdown-menu a { display: block; padding: 10px; font-size: 13px; }
   .site-auth-actions { padding-top: 14px; }
 }
 @media (max-width: 480px) {

@@ -25,6 +25,7 @@ function MessageSummaryPage() {
   const navigate = useNavigate();
 
   const xml = location.state?.xml;
+  const returnToGenerator = location.state?.from === "/message-generator";
 
 
   const [summaryResult, setSummaryResult] =
@@ -121,9 +122,9 @@ function MessageSummaryPage() {
 
           <button
             className="back-button"
-            onClick={() => navigate("/")}
+            onClick={() => returnToGenerator ? navigate(-1) : navigate("/")}
           >
-            ← Home
+            {returnToGenerator ? "← Back to Generator" : "← Home"}
           </button>
 
         </div>
@@ -285,10 +286,10 @@ function MessageSummaryPage() {
 
               <button
                 className="secondary-button"
-                onClick={() => navigate("/")}
+                onClick={() => returnToGenerator ? navigate(-1) : navigate("/")}
               >
 
-                ← Home
+                {returnToGenerator ? "← Back to Generator" : "← Home"}
 
               </button>
 

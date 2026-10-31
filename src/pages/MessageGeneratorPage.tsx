@@ -3,7 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
-  generateMessage
+  generateMessage,
+  getGeneratorFields,
+  getGeneratorMessageTypes,
+  getGeneratorVersions
 } from "../services/MessagegeneratorService";
 
 import {
@@ -27,7 +30,8 @@ import XmlEditor from "../components/XmlEditor";
 import ValidationResult from "../components/ValidationResult";
 
 import type {
-  MessageGenerationResponse
+  MessageGenerationResponse,
+  GeneratorField
 } from "../types/messagegenerator";
 
 import type {
@@ -80,11 +84,48 @@ function formatXml(xml: string): string {
 
 
 type GenerationMode = "DEFAULT" | "CUSTOM";
+type MessageFamily = "camt" | "pacs" | "pain";
+
+function getMessageFamily(messageType: string): MessageFamily {
+  return messageType.split(".")[0] === "camt" ? "camt" : messageType.split(".")[0] === "pain" ? "pain" : "pacs";
+}
+
+function getMessageTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    "pacs.002": "pacs.002 — Payment Status",
+    "pacs.004": "pacs.004 — Payment Return",
+    "pacs.008": "pacs.008 — Credit Transfer",
+    "pacs.009": "pacs.009 — Financial Institution Credit Transfer",
+    "pain.001": "pain.001 — Customer Credit Transfer Initiation",
+    "pain.002": "pain.002 — Customer Payment Status Report",
+    "pain.007": "pain.007 — Customer Payment Reversal",
+    "pain.008": "pain.008 — Customer Direct Debit Initiation"
+  };
+  return labels[type] ?? type;
+}
 type IdentifierField = "debtorIban" | "debtorBic" | "creditorIban" | "creditorBic";
 type IdentifierState = {
   status: "idle" | "loading" | "valid" | "invalid";
   message?: string;
 };
+
+const GENERATOR_SESSION_KEY = "fintechschema:message-generator-state";
+
+type SavedGeneratorState = {
+  generatedXml?: string;
+  result?: MessageGenerationResponse | null;
+  validationProfile?: string;
+  validationResult?: ValidationResponse | null;
+};
+
+function readSavedGeneratorState(): SavedGeneratorState {
+  try {
+    const saved = sessionStorage.getItem(GENERATOR_SESSION_KEY);
+    return saved ? JSON.parse(saved) as SavedGeneratorState : {};
+  } catch {
+    return {};
+  }
+}
 
 const DEFAULT_VALUES = {
   debtorName: "John Doe",
@@ -98,15 +139,6 @@ const DEFAULT_VALUES = {
   endToEndId: "E2E-DEMO-001"
 };
 
-const PACS_008_VERSIONS = [
-  "001.09",
-  "001.10",
-  "001.11",
-  "001.12",
-  "001.13",
-  "001.14"
-];
-
 function MessageGeneratorPage() {
 
   const navigate = useNavigate();
@@ -117,19 +149,26 @@ function MessageGeneratorPage() {
     version?: string;
   } | null;
 
+  const [messageFamily, setMessageFamily] =
+    useState<MessageFamily>(getMessageFamily(navigationState?.messageType ?? "pacs.008"));
+
   const [messageType, setMessageType] =
     useState(navigationState?.messageType ?? "pacs.008");
 
+  const [availableMessageTypes, setAvailableMessageTypes] = useState<string[]>([]);
+
   const [selectedVersion, setSelectedVersion] =
-    useState(navigationState?.version ?? "001.14");
+    useState(navigationState?.version ?? "");
 
   const [generationMode, setGenerationMode] =
     useState<GenerationMode>(navigationState?.messageType ? "DEFAULT" : "CUSTOM");
 
-  const generatorSupported = messageType === "pacs.008";
+  const generatorSupported = /^(pacs|camt|pain)\.\d{3}$/.test(messageType);
 
   const [geography, setGeography] =
     useState("ISO");
+
+  const [supportedVersions, setSupportedVersions] = useState<string[]>([]);
 
   const [debtorName, setDebtorName] =
     useState("");
@@ -166,11 +205,76 @@ function MessageGeneratorPage() {
   const [endToEndId, setEndToEndId] =
     useState("");
 
+  const [schemaFields, setSchemaFields] = useState<GeneratorField[]>([]);
+  const [schemaFieldValues, setSchemaFieldValues] = useState<Record<string, string>>({});
+  const [schemaLoading, setSchemaLoading] = useState(false);
+  const [schemaError, setSchemaError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    setAvailableMessageTypes([]);
+    getGeneratorMessageTypes(messageFamily)
+      .then((types) => {
+        if (!active) return;
+        setAvailableMessageTypes(types);
+        const preferred = messageFamily === "pacs" && types.includes("pacs.008") ? "pacs.008" : types[0] ?? "";
+        setMessageType((current) => types.includes(current) ? current : preferred);
+        if (types.length === 0) setSchemaError(`No ${messageFamily.toUpperCase()} message schemas are bundled.`);
+      })
+      .catch((error: unknown) => {
+        if (active) setSchemaError(error instanceof Error ? error.message : "Unable to load message types.");
+      });
+    return () => { active = false; };
+  }, [messageFamily]);
+
+  useEffect(() => {
+    if (!generatorSupported || geography === "SEPA") {
+      setSupportedVersions([]);
+      setSelectedVersion("");
+      setSchemaFields([]);
+      setSchemaError("");
+      return;
+    }
+    let active = true;
+    setSupportedVersions([]);
+    setSelectedVersion("");
+    setSchemaError("");
+    getGeneratorVersions(geography, messageType)
+      .then((versions: string[]) => {
+        if (!active) return;
+        setSupportedVersions(versions);
+        if (versions.length > 0) setSelectedVersion(versions[0]);
+        else setSchemaError(`No ${messageType} schemas are bundled for ${geography}.`);
+      })
+      .catch((error: unknown) => {
+        if (active) setSchemaError(error instanceof Error ? error.message : "Unable to load available schema versions.");
+      });
+    return () => { active = false; };
+  }, [geography, generatorSupported, messageType]);
+
+  useEffect(() => {
+    if (!generatorSupported || geography === "SEPA" || supportedVersions.length === 0 || !supportedVersions.includes(selectedVersion)) {
+      setSchemaFields([]);
+      setSchemaLoading(false);
+      return;
+    }
+    let active = true;
+    setSchemaLoading(true);
+    setSchemaError("");
+    getGeneratorFields(geography, selectedVersion, messageType)
+      .then((fields) => { if (active) setSchemaFields(fields); })
+      .catch((error: unknown) => { if (active) { setSchemaFields([]); setSchemaError(error instanceof Error ? error.message : "Unable to load schema fields."); } })
+      .finally(() => { if (active) setSchemaLoading(false); });
+    return () => { active = false; };
+  }, [geography, selectedVersion, generatorSupported, supportedVersions, messageType]);
+
+  const [savedGeneratorState] = useState(readSavedGeneratorState);
+
   const [loading, setLoading] =
     useState(false);
 
   const [result, setResult] =
-    useState<MessageGenerationResponse | null>(null);
+    useState<MessageGenerationResponse | null>(savedGeneratorState.result ?? null);
 
   /*
    * Validation state.
@@ -178,10 +282,10 @@ function MessageGeneratorPage() {
    * generated XML can be edited and validated without generating again.
    */
   const [validationProfile, setValidationProfile] =
-    useState("ISO20022");
+    useState(savedGeneratorState.validationProfile ?? "ISO20022");
 
   const [validationResult, setValidationResult] =
-    useState<ValidationResponse | null>(null);
+    useState<ValidationResponse | null>(savedGeneratorState.validationResult ?? null);
 
   const [validationLoading, setValidationLoading] =
     useState(false);
@@ -198,7 +302,20 @@ function MessageGeneratorPage() {
    * ValidatorPage can be used here as well.
    */
   const [generatedXml, setGeneratedXml] =
-    useState("");
+    useState(savedGeneratorState.generatedXml ?? "");
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(GENERATOR_SESSION_KEY, JSON.stringify({
+        generatedXml,
+        result,
+        validationProfile,
+        validationResult
+      } satisfies SavedGeneratorState));
+    } catch {
+      // Storage may be unavailable in private browsing; the page still works normally.
+    }
+  }, [generatedXml, result, validationProfile, validationResult]);
 
 
   useEffect(() => {
@@ -354,30 +471,46 @@ function MessageGeneratorPage() {
 
     if (generationMode === "CUSTOM") {
 
-      if (
+      const inputValues: Record<string, string> = {
+        debtorName, debtorIban, debtorBic, creditorName, creditorIban,
+        creditorBic, amount, currency, endToEndId, ...schemaFieldValues
+      };
+      const missingField = schemaFields.find(
+        (field) => field.required && !inputValues[field.key]?.trim()
+      );
+      if (schemaLoading || schemaFields.length === 0) {
+        alert(`The ${messageType} schema fields have not loaded yet. Please wait and try again.`);
+        return;
+      }
+      if (missingField) {
+        alert(`${missingField.label} is required by the selected ${messageType} schema.`);
+        return;
+      }
+
+      if (messageType === "pacs.008" && (
         !debtorName.trim() ||
         !debtorIban.trim() ||
         !debtorBic.trim()
-      ) {
+      )) {
         alert("Please enter debtor details.");
         return;
       }
 
-      if (
+      if (messageType === "pacs.008" && (
         !creditorName.trim() ||
         !creditorIban.trim() ||
         !creditorBic.trim()
-      ) {
+      )) {
         alert("Please enter creditor details.");
         return;
       }
 
-      if (!amount.trim()) {
+      if (messageType === "pacs.008" && !amount.trim()) {
         alert("Please enter amount.");
         return;
       }
 
-      if (!isCustomIdentifiersValid) {
+      if (messageType === "pacs.008" && !isCustomIdentifiersValid) {
         alert("Please enter valid debtor and creditor IBAN/BIC values.");
         return;
       }
@@ -406,7 +539,8 @@ function MessageGeneratorPage() {
             currency: values.currency,
 
             endToEndId: values.endToEndId,
-            version: selectedVersion
+            version: selectedVersion,
+            fields: { ...schemaFieldValues, currency, returnAmount: schemaFieldValues.returnAmount ?? amount }
           },
 
           geography
@@ -637,7 +771,8 @@ function MessageGeneratorPage() {
       "/summary",
       {
         state: {
-          xml: generatedXml
+          xml: generatedXml,
+          from: location.pathname
         }
       }
     );
@@ -772,106 +907,71 @@ function MessageGeneratorPage() {
               </div>
             )}
 
-            <div className="generator-grid">
-
+            <div className="generator-grid generator-config-grid">
               <div className="form-group">
-
-                <label>
-                  Message Type
-                </label>
-
-                <select
-                  value={messageType}
-                  onChange={(e) => {
-                    setMessageType(
-                      e.target.value
-                    );
-                    setResult(null);
-                    setValidationResult(null);
-                  }}
-                >
-
-                  <option value="pacs.008">
-                    pacs.008 — Credit Transfer
-                  </option>
-
-                  <option
-                    value="pacs.002"
-                    disabled
-                  >
-                    pacs.002 — Payment Status
-                    (Coming Soon)
-                  </option>
-
+                <label>Message Family</label>
+                <select value={messageFamily} onChange={(event) => {
+                  const family = event.target.value as MessageFamily;
+                  setMessageFamily(family);
+                  setMessageType("");
+                  setSelectedVersion("");
+                  setSchemaFields([]);
+                  setSchemaFieldValues({});
+                  setResult(null);
+                  setValidationResult(null);
+                }}>
+                  <option value="camt">CAMT — Cash Management</option>
+                  <option value="pacs">PACS — Payments Clearing and Settlement</option>
+                  <option value="pain">PAIN — Payments Initiation</option>
                 </select>
-
               </div>
 
-
               <div className="form-group">
-
-                <label>
-                  Message Version
-                </label>
-
-                <select
-                  value={selectedVersion}
-                  onChange={(e) => {
-                    setSelectedVersion(e.target.value);
-                    setResult(null);
-                    setValidationResult(null);
-                  }}
-                  disabled={messageType !== "pacs.008"}
-                >
-                  {messageType === "pacs.008" ? (
-                    PACS_008_VERSIONS.map((version) => (
-                      <option key={version} value={version}>
-                        pacs.008.{version}
-                      </option>
-                    ))
-                  ) : (
-                    <option value={selectedVersion}>
-                      {messageType}.{selectedVersion}
-                    </option>
-                  )}
+                <label>Message Type</label>
+                <select value={messageType} disabled={availableMessageTypes.length === 0} onChange={(event) => {
+                  const nextType = event.target.value;
+                  setMessageType(nextType);
+                  setSelectedVersion("");
+                  setSchemaFields([]);
+                  setSchemaFieldValues({});
+                  setResult(null);
+                  setValidationResult(null);
+                }}>
+                  {!messageType && <option value="" disabled>Loading message types…</option>}
+                  {availableMessageTypes.map((type) => (
+                    <option key={type} value={type}>{getMessageTypeLabel(type)}</option>
+                  ))}
                 </select>
-
               </div>
 
-
               <div className="form-group">
-
-                <label>
-                  Geography / Profile
-                </label>
-
-                <select
-                  value={geography}
-                  onChange={(e) => {
-                    setGeography(
-                      e.target.value
-                    );
-                    setResult(null);
-                    setValidationResult(null);
-                  }}
-                >
-
-                  <option value="ISO">
-                    ISO 20022
-                  </option>
-
-                  <option value="SEPA">
-                    SEPA
-                  </option>
-
-                  <option value="CBPR_PLUS">
-                    CBPR+
-                  </option>
-
+                <label>Geography / Profile</label>
+                <select value={geography} onChange={(event) => {
+                  const nextGeography = event.target.value;
+                  setGeography(nextGeography);
+                  setValidationProfile(nextGeography === "CBPR_PLUS" ? "CBPR_PLUS" : nextGeography === "SEPA" ? "SEPA" : "ISO20022");
+                  setResult(null);
+                  setValidationResult(null);
+                }}>
+                  <option value="ISO">ISO 20022</option>
+                  <option value="SEPA">SEPA (schema unavailable)</option>
+                  <option value="CBPR_PLUS">CBPR+</option>
                 </select>
-
+                {geography === "SEPA" && (
+                  <small className="generator-support-note">
+                    SEPA generation is unavailable until a SEPA schema is configured.
+                  </small>
+                )}
               </div>
 
+              <div className="form-group">
+                <label>Detected XSD Version</label>
+                <input
+                  value={selectedVersion ? `${messageType}.${selectedVersion}` : schemaError ? "Unavailable" : "Loading…"}
+                  readOnly
+                  aria-live="polite"
+                />
+              </div>
             </div>
 
           </div>
@@ -880,239 +980,53 @@ function MessageGeneratorPage() {
           {generationMode === "CUSTOM" ? (
             <>
 
-          {/* Debtor */}
-
-          <div className="generator-section">
-
-            <h2>
-              Debtor
-            </h2>
-
-            <div className="generator-grid">
-
-              <div className="form-group">
-
-                <label>
-                  Name
-                </label>
-
-                <input
-                  value={debtorName}
-                  onChange={(e) =>
-                    setDebtorName(
-                      e.target.value
-                    )
-                  }
-                  placeholder="Debtor name"
-                />
-
+          {schemaLoading && <div className="generator-support-note">Loading fields from the selected {messageType} schema…</div>}
+          {schemaError && <div className="generator-support-note">{schemaError}</div>}
+          {Object.entries(schemaFields.reduce<Record<string, GeneratorField[]>>((sections, field) => {
+            (sections[field.section] ??= []).push(field);
+            return sections;
+          }, {})).map(([section, fields]) => (
+            <div className="generator-section" key={section}>
+              <h2>{section === "Payment" ? "Payment Details" : section}</h2>
+              <div className="generator-grid">
+                {fields.map((field) => {
+                  const current: Record<string, string> = {
+                    debtorName, debtorIban, debtorBic, creditorName, creditorIban,
+                    creditorBic, amount, currency, endToEndId, ...schemaFieldValues
+                  };
+                  const setters: Record<string, (value: string) => void> = {
+                    debtorName: setDebtorName, debtorIban: setDebtorIban, debtorBic: setDebtorBic,
+                    creditorName: setCreditorName, creditorIban: setCreditorIban,
+                    creditorBic: setCreditorBic, amount: setAmount, currency: setCurrency,
+                    endToEndId: setEndToEndId
+                  };
+                  const updateField = (value: string) => {
+                    const setter = setters[field.key];
+                    if (setter) setter(value);
+                    else setSchemaFieldValues((values) => ({ ...values, [field.key]: value }));
+                  };
+                  const input = field.inputType === "currency" ? (
+                    <select value={current[field.key] ?? "EUR"} onChange={(event) => updateField(event.target.value)}>
+                      {["EUR", "USD", "GBP", "CHF"].map((code) => <option key={code} value={code}>{code}</option>)}
+                    </select>
+                  ) : (
+                    <input type={field.inputType} value={current[field.key] ?? ""} required={field.required}
+                      step={field.inputType === "number" ? "0.00001" : undefined}
+                      onChange={(event) => updateField(event.target.value)} placeholder={field.placeholder} />
+                  );
+                  return <div className="form-group" key={field.key}>
+                    <label>{field.label}{field.required ? " *" : ""}</label>
+                    {input}
+                    <small className="generator-field-path">XSD element: {field.schemaPath}</small>
+                    {field.key === "debtorIban" && getIdentifierStatus("debtorIban")}
+                    {field.key === "debtorBic" && getIdentifierStatus("debtorBic")}
+                    {field.key === "creditorIban" && getIdentifierStatus("creditorIban")}
+                    {field.key === "creditorBic" && getIdentifierStatus("creditorBic")}
+                  </div>;
+                })}
               </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  IBAN
-                </label>
-
-                <input
-                  value={debtorIban}
-                  onChange={(e) =>
-                    setDebtorIban(
-                      e.target.value
-                    )
-                  }
-                  placeholder="DE89370400440532013000"
-                />
-                {getIdentifierStatus("debtorIban")}
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  BIC
-                </label>
-
-                <input
-                  value={debtorBic}
-                  onChange={(e) =>
-                    setDebtorBic(
-                      e.target.value
-                    )
-                  }
-                  placeholder="COBADEFFXXX"
-                />
-                {getIdentifierStatus("debtorBic")}
-
-              </div>
-
             </div>
-
-          </div>
-
-
-          {/* Creditor */}
-
-          <div className="generator-section">
-
-            <h2>
-              Creditor
-            </h2>
-
-            <div className="generator-grid">
-
-              <div className="form-group">
-
-                <label>
-                  Name
-                </label>
-
-                <input
-                  value={creditorName}
-                  onChange={(e) =>
-                    setCreditorName(
-                      e.target.value
-                    )
-                  }
-                  placeholder="Creditor name"
-                />
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  IBAN
-                </label>
-
-                <input
-                  value={creditorIban}
-                  onChange={(e) =>
-                    setCreditorIban(
-                      e.target.value
-                    )
-                  }
-                  placeholder="FR7630006000011234567890189"
-                />
-                {getIdentifierStatus("creditorIban")}
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  BIC
-                </label>
-
-                <input
-                  value={creditorBic}
-                  onChange={(e) =>
-                    setCreditorBic(
-                      e.target.value
-                    )
-                  }
-                  placeholder="AGRIFRPPXXX"
-                />
-                {getIdentifierStatus("creditorBic")}
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          {/* Payment */}
-
-          <div className="generator-section">
-
-            <h2>
-              Payment Details
-            </h2>
-
-            <div className="generator-grid">
-
-              <div className="form-group">
-
-                <label>
-                  Amount
-                </label>
-
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) =>
-                    setAmount(
-                      e.target.value
-                    )
-                  }
-                  placeholder="1250.00"
-                />
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  Currency
-                </label>
-
-                <select
-                  value={currency}
-                  onChange={(e) =>
-                    setCurrency(
-                      e.target.value
-                    )
-                  }
-                >
-
-                  <option value="EUR">
-                    EUR
-                  </option>
-
-                  <option value="USD">
-                    USD
-                  </option>
-
-                  <option value="GBP">
-                    GBP
-                  </option>
-
-                  <option value="CHF">
-                    CHF
-                  </option>
-
-                </select>
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  End-to-End ID
-                </label>
-
-                <input
-                  value={endToEndId}
-                  onChange={(e) =>
-                    setEndToEndId(
-                      e.target.value
-                    )
-                  }
-                  placeholder="Optional"
-                />
-
-              </div>
-
-            </div>
-
-          </div>
+          ))}
 
             </>
           ) : (
@@ -1244,8 +1158,8 @@ function MessageGeneratorPage() {
                       ISO 20022 Standard
                     </option>
 
-                    <option value="SEPA">
-                      SEPA Payments
+                    <option value="SEPA" disabled>
+                      SEPA Payments (schema unavailable)
                     </option>
 
                     <option value="CBPR_PLUS">

@@ -36,6 +36,120 @@ const sampleXml = `
 `;
 
 
+const ISO_20022_NAMESPACE_PREFIX = "urn:iso:std:iso:20022:tech:xsd:";
+
+function findCompleteXmlRootEnd(xml: string): number | null {
+    const openElements: string[] = [];
+    let index = 0;
+
+    while (index < xml.length) {
+        if (xml[index] !== "<") {
+            index += 1;
+            continue;
+        }
+
+        if (xml.startsWith("<!--", index)) {
+            const commentEnd = xml.indexOf("-->", index + 4);
+            if (commentEnd < 0) return null;
+            index = commentEnd + 3;
+            continue;
+        }
+        if (xml.startsWith("<![CDATA[", index)) {
+            const cdataEnd = xml.indexOf("]]>", index + 9);
+            if (cdataEnd < 0) return null;
+            index = cdataEnd + 3;
+            continue;
+        }
+        if (xml.startsWith("<?", index)) {
+            const instructionEnd = xml.indexOf("?>", index + 2);
+            if (instructionEnd < 0) return null;
+            index = instructionEnd + 2;
+            continue;
+        }
+
+        const isDoctype = /^<!DOCTYPE\b/i.test(xml.slice(index));
+        let quote = "";
+        let subsetDepth = 0;
+        let end = index + 1;
+        for (; end < xml.length; end += 1) {
+            const character = xml[end];
+            if (quote) {
+                if (character === quote) quote = "";
+                continue;
+            }
+            if (character === '"' || character === "'") {
+                quote = character;
+                continue;
+            }
+            if (isDoctype && character === "[") subsetDepth += 1;
+            if (isDoctype && character === "]") subsetDepth = Math.max(0, subsetDepth - 1);
+            if (character === ">" && subsetDepth === 0) break;
+        }
+        if (end >= xml.length) return null;
+
+        const markup = xml.slice(index, end + 1);
+        index = end + 1;
+        if (markup.startsWith("<!")) continue;
+
+        const closeMatch = markup.match(/^<\/\s*([^\s/>]+)/);
+        if (closeMatch) {
+            if (openElements.pop() !== closeMatch[1]) return null;
+            if (openElements.length === 0) return index;
+            continue;
+        }
+
+        const openMatch = markup.match(/^<\s*([^\s/>]+)/);
+        if (!openMatch) return null;
+        if (/\/\s*>$/.test(markup)) {
+            if (openElements.length === 0) return index;
+        } else {
+            openElements.push(openMatch[1]);
+        }
+    }
+
+    return null;
+}
+
+function extractDocumentForValidation(xml: string): { xml: string; extracted: boolean; ignoredTrailingText: boolean } {
+    let inputXml = xml;
+    let parsed = new DOMParser().parseFromString(inputXml, "application/xml");
+    let ignoredTrailingText = false;
+
+    if (parsed.getElementsByTagName("parsererror").length > 0) {
+        const rootEnd = findCompleteXmlRootEnd(xml);
+        if (rootEnd === null) return { xml, extracted: false, ignoredTrailingText: false };
+
+        const trailingText = xml.slice(rootEnd);
+        if (!trailingText.trim() || trailingText.includes("<")) {
+            return { xml, extracted: false, ignoredTrailingText: false };
+        }
+
+        inputXml = xml.slice(0, rootEnd);
+        parsed = new DOMParser().parseFromString(inputXml, "application/xml");
+        if (parsed.getElementsByTagName("parsererror").length > 0) {
+            return { xml, extracted: false, ignoredTrailingText: false };
+        }
+        ignoredTrailingText = true;
+    }
+
+    if (parsed.documentElement.localName === "Document") {
+        return { xml: inputXml, extracted: false, ignoredTrailingText };
+    }
+
+    const documents = Array.from(parsed.getElementsByTagNameNS("*", "Document"))
+        .filter((element) => element.namespaceURI?.startsWith(ISO_20022_NAMESPACE_PREFIX));
+
+    if (documents.length !== 1) {
+        return { xml: inputXml, extracted: false, ignoredTrailingText };
+    }
+
+    return {
+        xml: new XMLSerializer().serializeToString(documents[0]),
+        extracted: true,
+        ignoredTrailingText,
+    };
+}
+
 /**
  * Formats XML with indentation.
  */
@@ -107,6 +221,10 @@ function ValidatorPage() {
 
     const [result, setResult] =
         useState<ValidationResponse | null>(null);
+
+    const [documentWasExtracted, setDocumentWasExtracted] = useState(false);
+    const [trailingTextWasIgnored, setTrailingTextWasIgnored] = useState(false);
+    const [validatedXml, setValidatedXml] = useState<string | null>(null);
 
     const [summaryResult, setSummaryResult] =
         useState<MessageSummaryResponse | null>(null);
@@ -213,6 +331,10 @@ function ValidatorPage() {
         }
 
 
+        const { xml: validationXml, extracted, ignoredTrailingText } = extractDocumentForValidation(xml);
+        setDocumentWasExtracted(extracted);
+        setTrailingTextWasIgnored(ignoredTrailingText);
+        setValidatedXml(validationXml);
         setLoading(true);
         setSummaryResult(null);
         setSummaryError(null);
@@ -235,7 +357,7 @@ function ValidatorPage() {
                     console.log("Calling Custom XSD Validation API");
 
                     response = await validateWithCustomXsd(
-                        xml,
+                        validationXml,
                         customXsdFile
                     );
 
@@ -247,7 +369,7 @@ function ValidatorPage() {
                     );
 
                     response = await validateXml(
-                        xml,
+                        validationXml,
                         validationProfile
                     );
 
@@ -295,7 +417,7 @@ function ValidatorPage() {
         setSummaryError(null);
 
         try {
-            const response = await generateMessageSummary(xml);
+            const response = await generateMessageSummary(validatedXml ?? xml);
 
             if (!response.success) {
                 setSummaryResult(response);
@@ -524,11 +646,24 @@ function ValidatorPage() {
 </section>
 
 
+                <div className="message-privacy-note" role="note">
+                    <span aria-hidden="true">🔒</span>
+                    Message XML is processed at runtime for validation and is not stored by FintechSchema.
+                </div>
+
                 {/* XML Editor */}
 
                 <XmlEditor
                     xml={xml}
-                    onXmlChange={setXml}
+                    onXmlChange={(value) => {
+                        setXml(value);
+                        setResult(null);
+                        setSummaryResult(null);
+                        setSummaryError(null);
+                        setDocumentWasExtracted(false);
+                        setTrailingTextWasIgnored(false);
+                        setValidatedXml(null);
+                    }}
                     onValidate={handleValidate}
                     onFormat={handleFormatXml}
                     loading={loading}
@@ -544,6 +679,13 @@ function ValidatorPage() {
                         <ValidationResult
                             result={result}
                         />
+
+                        {(documentWasExtracted || trailingTextWasIgnored) && (
+                            <div className="envelope-validation-note" role="status">
+                                {trailingTextWasIgnored && <span>Text after the closing XML element was ignored. </span>}
+                                {documentWasExtracted && <>A SWIFT-style envelope was detected. The embedded <code>Document</code> was sent for ISO 20022 validation; the wrapper and <code>AppHdr</code> were not validated.</>}
+                            </div>
+                        )}
 
 
                         {/* Generate summary only for valid messages */}

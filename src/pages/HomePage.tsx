@@ -1,10 +1,11 @@
 import SEO from "../components/SEO";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 import { Link } from "react-router-dom";
 
 import { getBlogs, type Blog } from "../services/blogService";
+import { submitFeedback } from "../services/feedbackService";
 
 function formatDate(value?: string) {
 
@@ -33,6 +34,9 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState(false);
+  const [feedback, setFeedback] = useState({ name: "", country: "", email: "", feedbackType: "Suggestion" as "Review" | "Suggestion", message: "", website: "" });
+  const [feedbackStatus, setFeedbackStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [feedbackStatusMessage, setFeedbackStatusMessage] = useState("");
 
   useEffect(() => {
 
@@ -65,6 +69,22 @@ function HomePage() {
     };
 
   }, []);
+
+  const handleFeedbackSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFeedbackStatus("sending");
+    setFeedbackStatusMessage("");
+
+    try {
+      const message = await submitFeedback(feedback);
+      setFeedbackStatus("success");
+      setFeedbackStatusMessage(message);
+      setFeedback({ name: "", country: "", email: "", feedbackType: "Suggestion", message: "", website: "" });
+    } catch (submitError) {
+      setFeedbackStatus("error");
+      setFeedbackStatusMessage(submitError instanceof Error ? submitError.message : "Unable to send feedback right now.");
+    }
+  };
 
   const latestBlogs = useMemo(
 
@@ -483,6 +503,30 @@ function HomePage() {
 
           </div>
 
+        </section>
+
+        <section className="home-feedback-section" id="feedback">
+          <div className="home-feedback-intro">
+            <span className="home-section-eyebrow">YOUR FEEDBACK SHAPES THE ROADMAP</span>
+            <h2>Help us make FintechSchema more useful.</h2>
+            <p>Share a review, suggest a feature or tell us what would make your fintech work easier.</p>
+            <div className="home-feedback-recipient"><span aria-hidden="true">✉</span> Feedback goes directly to our team.</div>
+          </div>
+          <form className="home-feedback-form" onSubmit={handleFeedbackSubmit}>
+            <div className="home-feedback-fields">
+              <label>Name<input autoComplete="name" maxLength={120} required value={feedback.name} onChange={(event) => setFeedback({ ...feedback, name: event.target.value })} placeholder="Your name" /></label>
+              <label>Country<input autoComplete="country-name" maxLength={100} required value={feedback.country} onChange={(event) => setFeedback({ ...feedback, country: event.target.value })} placeholder="Your country" /></label>
+              <label>Email<input type="email" autoComplete="email" maxLength={254} required value={feedback.email} onChange={(event) => setFeedback({ ...feedback, email: event.target.value })} placeholder="you@example.com" /></label>
+              <label>Type of feedback<select value={feedback.feedbackType} onChange={(event) => setFeedback({ ...feedback, feedbackType: event.target.value as "Review" | "Suggestion" })}><option>Suggestion</option><option>Review</option></select></label>
+              <label className="home-feedback-message">Your review or suggestion<textarea required minLength={10} maxLength={5000} rows={5} value={feedback.message} onChange={(event) => setFeedback({ ...feedback, message: event.target.value })} placeholder="Tell us what you think or what we should build next…" /></label>
+              <label className="home-feedback-honeypot" aria-hidden="true">Website<input tabIndex={-1} autoComplete="off" value={feedback.website} onChange={(event) => setFeedback({ ...feedback, website: event.target.value })} /></label>
+            </div>
+            <div className="home-feedback-submit-row">
+              <span>Your name, country and email are included so we can follow up if needed.</span>
+              <button type="submit" className="home-primary-button" disabled={feedbackStatus === "sending"}>{feedbackStatus === "sending" ? "Sending…" : "Send feedback →"}</button>
+            </div>
+            {feedbackStatusMessage && <p className={`home-feedback-status ${feedbackStatus}`} role="status">{feedbackStatusMessage}</p>}
+          </form>
         </section>
 
       </main>

@@ -1044,6 +1044,11 @@ function MessageGeneratorPage() {
 
           <div className="generator-action">
 
+            <p className="message-privacy-note" role="note">
+              <span aria-hidden="true">🔒</span>
+              Generated and submitted message XML is processed at runtime for validation and is not stored by FintechSchema.
+            </p>
+
             <button
               className="summary-button"
               onClick={handleGenerate}

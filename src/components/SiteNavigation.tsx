@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 
+const SHOW_ABOUT_LINK = false;
+
 const links = [
   { to: "/validator", label: "Validator" },
   { to: "/message-generator", label: "Message Generator" },
@@ -89,7 +91,7 @@ export default function SiteNavigation() {
             <NavLink to="/documentation" onClick={() => { setMenuOpen(false); setResourcesOpen(false); }}>Documentation</NavLink>
           </div>}
         </div>
-        <NavLink to="/about" className={({ isActive }) => isActive ? "is-active" : undefined} onClick={() => setMenuOpen(false)}>About</NavLink>
+        {SHOW_ABOUT_LINK && <NavLink to="/about" className={({ isActive }) => isActive ? "is-active" : undefined} onClick={() => setMenuOpen(false)}>About</NavLink>}
         <div className="site-auth-actions">
           <Link to="/login" onClick={() => setMenuOpen(false)}>Log in</Link>
           <Link to="/signup" className="site-signup" onClick={() => setMenuOpen(false)}>Sign up</Link>
